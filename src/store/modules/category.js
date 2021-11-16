@@ -1,8 +1,8 @@
 export default {
-    namespaced: true,
-    state() {
-        return {
-            list: []
-        }
+  namespaced: true,
+  state () {
+    return {
+      list: []
     }
+  }
 }

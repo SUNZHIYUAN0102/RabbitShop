@@ -3,17 +3,17 @@ import Layout from '@/views/Layout.vue'
 import Home from '@/views/home/index.vue'
 
 const routes = [{
+  path: '/',
+  component: Layout,
+  children: [{
     path: '/',
-    component: Layout,
-    children: [{
-        path: '/',
-        component: Home
-    }]
+    component: Home
+  }]
 }]
 
 const router = createRouter({
-    history: createWebHashHistory(),
-    routes
+  history: createWebHashHistory(),
+  routes
 })
 
 export default router
