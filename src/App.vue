@@ -1,19 +1,20 @@
 <template>
   <div>
-    {{$store.state.user.profile.account}}
-    <button @click="$store.commit('user/setUser', {account:'dick'})">Click</button>
+    <button @click="fn">Click</button>
   </div>
 </template>
 
 <script>
-import { useStore } from "vuex";
+import request from '@/utils/request';
 export default {
   setup() {
-    const store = useStore();
+    const fn = ()=>{
+      request('/home/inVogue/mutli','get')
+    }
 
-    return {
-
-    };
+    return{
+      fn
+    }
   },
 };
 </script>
