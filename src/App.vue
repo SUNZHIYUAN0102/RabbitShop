@@ -1,20 +1,3 @@
 <template>
-  <div>
-    <button @click="fn">Click</button>
-  </div>
+  <router-view></router-view>
 </template>
-
-<script>
-import request from '@/utils/request';
-export default {
-  setup() {
-    const fn = ()=>{
-      request('/home/inVogue/mutli','get')
-    }
-
-    return{
-      fn
-    }
-  },
-};
-</script>
