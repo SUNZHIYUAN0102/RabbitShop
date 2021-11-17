@@ -10,12 +10,16 @@
 <script>
 import appNavbar from "../components/app-navbar.vue";
 import appHeader from "../components/app-header.vue";
+import { useStore } from "vuex";
 export default {
-  setup() {},
-  components:{
+  setup() {
+    const store = useStore();
+    store.dispatch("category/getList");
+  },
+  components: {
     appNavbar,
-    appHeader
-  }
+    appHeader,
+  },
 };
 </script>
 

@@ -25,7 +25,7 @@
   </nav>
 </template>
 <script>
-import { computed } from '@vue/reactivity';
+import { computed } from 'vue';
 import { useStore } from "vuex";
 export default {
   setup() {
