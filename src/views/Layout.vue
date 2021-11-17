@@ -1,6 +1,6 @@
 <template>
   <app-navbar></app-navbar>
-  <header>2</header>
+  <app-header></app-header>
   <div class="main">
     <router-view></router-view>
   </div>
@@ -9,10 +9,12 @@
 
 <script>
 import appNavbar from "../components/app-navbar.vue";
+import appHeader from "../components/app-header.vue";
 export default {
   setup() {},
   components:{
-    appNavbar
+    appNavbar,
+    appHeader
   }
 };
 </script>

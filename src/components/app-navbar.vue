@@ -25,11 +25,14 @@
   </nav>
 </template>
 <script>
+import { computed } from '@vue/reactivity';
 import { useStore } from "vuex";
 export default {
   setup() {
     const store = useStore();
-    const { profile } = store.state.user;
+    const profile = computed(()=>{
+      return store.state.user.profile
+    });
     return {
       profile,
     };
