@@ -1,15 +1,16 @@
 <template>
   <app-navbar></app-navbar>
   <app-header></app-header>
-  <div class="main">
+  <main class="app-body">
     <router-view></router-view>
-  </div>
-  <footer>3</footer>
+  </main>
+  <app-footer></app-footer>
 </template>
 
 <script>
 import appNavbar from "../components/app-navbar.vue";
 import appHeader from "../components/app-header.vue";
+import appFooter from "../components/app-footer.vue";
 import { useStore } from "vuex";
 export default {
   setup() {
@@ -19,9 +20,13 @@ export default {
   components: {
     appNavbar,
     appHeader,
+    appFooter,
   },
 };
 </script>
 
 <style scoped lang="less">
+.app-body {
+  min-height: 600px;
+}
 </style>

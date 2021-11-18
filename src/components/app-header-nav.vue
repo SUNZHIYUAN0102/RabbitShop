@@ -1,17 +1,14 @@
 <template>
   <ul class="app-header-nav">
     <li class="home"><RouterLink to="/">首页</RouterLink></li>
-    <li v-for="item in list" :key="item.id">
-      <router-link to="#">{{item.name}}</router-link>
-      <div class="layer">
+    <li v-for="item in list" :key="item.id" @mouseenter="show(item.id)" @mouseleave="hide(item.id)">
+      <router-link @click="hide(item.id)" :to="`/category/${item.id}`">{{ item.name }}</router-link>
+      <div class="layer" :class="{open:item.open}">
         <ul>
           <li v-for="sub in item.children" :key="sub.id">
-            <router-link to="#">
-              <img
-                :src="sub.picture"
-                alt=""
-              />
-              <p>{{sub.name}}</p>
+            <router-link @click="hide(item.id)" :to="`/category/sub/${sub.id}`">
+              <img :src="sub.picture" alt="" />
+              <p>{{ sub.name }}</p>
             </router-link>
           </li>
         </ul>
@@ -26,12 +23,22 @@ import { useStore } from "vuex";
 export default {
   setup() {
     const store = useStore();
-    const list = computed(()=>{
+    const list = computed(() => {
       return store.state.category.list;
     });
 
+    const show = (id) => {
+      store.commit("category/show", id);
+    };
+
+    const hide = (id) => {
+      store.commit("category/hide", id);
+    };
+
     return {
       list,
+      show,
+      hide,
     };
   },
 };
@@ -60,14 +67,14 @@ export default {
         color: @xtxColor;
         border-bottom: 1px solid @xtxColor;
       }
-      > .layer {
-        height: 132px;
-        opacity: 1;
-      }
     }
   }
 }
 .layer {
+  &.open {
+    height: 132px;
+    opacity: 1;
+  }
   width: 1240px;
   background-color: #fff;
   position: absolute;
