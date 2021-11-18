@@ -1,10 +1,11 @@
 <template>
-  <div class="home-category">
+  <div class="home-category" @mouseleave="categoryId = null">
     <ul class="menu">
       <li
         v-for="item in menuList"
         :key="item.id"
         @mouseenter="categoryId = item.id"
+        :class="{active:categoryId === item.id}"
       >
         <router-link :to="`/category/${item.id}`">{{ item.name }}</router-link>
         <template v-if="item.children">
@@ -19,18 +20,33 @@
     </ul>
 
     <div class="layer">
-      <h4>分类推荐 <small>根据您的购买或浏览记录推荐</small></h4>
+      <h4>
+        {{ currCategory && currCategory.id === "brand" ? "品牌" : "分类" }}推荐
+        <small>根据您的购买或浏览记录推荐</small>
+      </h4>
       <ul v-if="currCategory && currCategory.goods">
         <li v-for="item in currCategory.goods" :key="item.id">
           <router-link to="/">
-            <img
-              :src="item.picture"
-              alt=""
-            />
+            <img :src="item.picture" alt="" />
             <div class="info">
-              <p class="name ellipsis-2">{{item.name}}</p>
-              <p class="desc ellipsis">{{item.desc}}</p>
-              <p class="price"><i>¥</i>{{item.price}}</p>
+              <p class="name ellipsis-2">{{ item.name }}</p>
+              <p class="desc ellipsis">{{ item.desc }}</p>
+              <p class="price"><i>¥</i>{{ item.price }}</p>
+            </div>
+          </router-link>
+        </li>
+      </ul>
+
+      <ul v-if="currCategory && currCategory.brands">
+        <li class="brand" v-for="item in currCategory.brands" :key="item.id">
+          <router-link to="/">
+            <img :src="item.picture" alt="" />
+            <div class="info">
+              <p class="place">
+                <i class="iconfont icon-dingwei"></i>{{ item.place }}
+              </p>
+              <p class="name ellipsis">{{ item.name }}</p>
+              <p class="desc ellipsis-2">{{ item.desc }}</p>
             </div>
           </router-link>
         </li>
@@ -42,6 +58,7 @@
 <script>
 import { computed, reactive, ref } from "vue";
 import { useStore } from "vuex";
+import { findBrand } from "@/api/home.js";
 export default {
   setup() {
     const store = useStore();
@@ -50,6 +67,7 @@ export default {
       id: "brand",
       name: "品牌",
       children: [{ id: "brand-child", name: "品牌推荐" }],
+      brands: [],
     });
 
     const menuList = computed(() => {
@@ -70,10 +88,14 @@ export default {
       return menuList.value.find((item) => item.id === categoryId.value);
     });
 
+    findBrand().then((data) => {
+      brand.brands = data.result;
+    });
+
     return {
       menuList,
       categoryId,
-      currCategory
+      currCategory,
     };
   },
 };
@@ -91,7 +113,7 @@ export default {
       padding-left: 40px;
       height: 50px;
       line-height: 50px;
-      &:hover {
+      &:hover,&.active {
         background: @xtxColor;
       }
       a {
@@ -167,6 +189,24 @@ export default {
             i {
               font-size: 16px;
             }
+          }
+        }
+      }
+    }
+    li.brand {
+      height: 180px;
+      a {
+        align-items: flex-start;
+        img {
+          width: 120px;
+          height: 160px;
+        }
+        .info {
+          p {
+            margin-top: 8px;
+          }
+          .place {
+            color: #999;
           }
         }
       }
