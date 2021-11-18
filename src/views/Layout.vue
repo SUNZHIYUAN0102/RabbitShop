@@ -1,6 +1,7 @@
 <template>
   <app-navbar></app-navbar>
   <app-header></app-header>
+  <appheader-nav-sticky></appheader-nav-sticky>
   <main class="app-body">
     <router-view></router-view>
   </main>
@@ -11,6 +12,7 @@
 import appNavbar from "../components/app-navbar.vue";
 import appHeader from "../components/app-header.vue";
 import appFooter from "../components/app-footer.vue";
+import appheaderNavSticky from "../components/app-header-sticky.vue"
 import { useStore } from "vuex";
 export default {
   setup() {
@@ -21,6 +23,7 @@ export default {
     appNavbar,
     appHeader,
     appFooter,
+    appheaderNavSticky
   },
 };
 </script>
