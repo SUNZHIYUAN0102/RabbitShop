@@ -5,7 +5,7 @@
         v-for="item in menuList"
         :key="item.id"
         @mouseenter="categoryId = item.id"
-        :class="{active:categoryId === item.id}"
+        :class="{active:categoryId === item.id && item.id != null}"
       >
         <router-link :to="`/category/${item.id}`">{{ item.name }}</router-link>
         <template v-if="item.children">
@@ -15,6 +15,10 @@
             :key="sub.id"
             >{{ sub.name }}</router-link
           >
+        </template>
+        <template v-else>
+            <xtx-skeleton width="60px" height="18px" style="margin-right:5px" bg="rgba(255,255,255,0.2)"></xtx-skeleton>
+            <xtx-skeleton width="50px" height="18px" bg="rgba(255,255,255,0.2)"></xtx-skeleton>
         </template>
       </li>
     </ul>
@@ -59,7 +63,9 @@
 import { computed, reactive, ref } from "vue";
 import { useStore } from "vuex";
 import { findBrand } from "@/api/home.js";
+import xtxSkeleton from '../../../components/library/xtx-skeleton.vue';
 export default {
+  components: { xtxSkeleton },
   setup() {
     const store = useStore();
 
@@ -216,6 +222,17 @@ export default {
 &:hover {
   .layer {
     display: block;
+  }
+}
+.xtx-skeleton {
+  animation: fade 1s linear infinite alternate;
+}
+@keyframes fade {
+  from {
+    opacity: 0.2;
+  }
+  to {
+    opacity: 1;
   }
 }
 </style>
