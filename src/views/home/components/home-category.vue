@@ -23,7 +23,7 @@
       </li>
     </ul>
 
-    <div class="layer">
+    <div class="layer" v-if="categoryId">
       <h4>
         {{ currCategory && currCategory.id === "brand" ? "品牌" : "分类" }}推荐
         <small>根据您的购买或浏览记录推荐</small>
