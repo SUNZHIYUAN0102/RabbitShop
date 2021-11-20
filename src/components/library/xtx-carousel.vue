@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { ref, watch } from "vue";
+import { onUnmounted, ref, watch } from "vue";
 export default {
   props: {
     sliders: {
@@ -95,6 +95,10 @@ export default {
 
       index.value = newIndex;
     };
+
+    onUnmounted(() => {
+      clearInterval(timer);
+    });
     return {
       index,
       stop,
