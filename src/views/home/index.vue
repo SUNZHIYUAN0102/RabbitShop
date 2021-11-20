@@ -4,24 +4,23 @@
       <home-category></home-category>
       <home-banner></home-banner>
     </div>
-    <home-pannel title="suck my dick" subTitle="fuckin noob">
-      <template #right>
-        <xtx-more></xtx-more>
-      </template>
-    </home-pannel>
+    <home-new></home-new>
+    <home-hot></home-hot>
   </div>
 </template>
 
 <script>
 import homeCategory from "./components/home-category.vue";
 import homeBanner from "./components/home-banner.vue";
-import homePannel from "./components/home-panel.vue";
+import homeNew from "./components/home-new.vue";
+import homeHot from "./components/home-hot.vue";
 export default {
   setup() {},
   components: {
     homeCategory,
     homeBanner,
-    homePannel,
+    homeNew,
+    homeHot,
   },
 };
 </script>
