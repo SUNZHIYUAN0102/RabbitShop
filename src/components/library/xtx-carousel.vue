@@ -1,32 +1,117 @@
 <template>
-  <div class='xtx-carousel'>
+  <div class="xtx-carousel" @mouseenter="stop()" @mouseleave="start()">
     <ul class="carousel-body">
-      <li class="carousel-item fade">
+      <li
+        class="carousel-item"
+        v-for="(item, i) in sliders"
+        :key="i"
+        :class="{ fade: index === i }"
+      >
         <router-link to="/">
-          <img src="http://yjy-xiaotuxian-dev.oss-cn-beijing.aliyuncs.com/picture/2021-04-15/1ba86bcc-ae71-42a3-bc3e-37b662f7f07e.jpg" alt="">
+          <img :src="item.imgUrl" alt="" />
         </router-link>
       </li>
     </ul>
-    <a href="javascript:;" class="carousel-btn prev"><i class="iconfont icon-angle-left"></i></a>
-    <a href="javascript:;" class="carousel-btn next"><i class="iconfont icon-angle-right"></i></a>
+    <a @click="toggle(-1)" href="javascript:;" class="carousel-btn prev"
+      ><i class="iconfont icon-angle-left"></i
+    ></a>
+    <a @click="toggle(1)" href="javascript:;" class="carousel-btn next"
+      ><i class="iconfont icon-angle-right"></i
+    ></a>
     <div class="carousel-indicator">
-      <span v-for="i in 5" :key="i"></span>
+      <span
+        @click="index = i"
+        v-for="(item, i) in sliders"
+        :key="i"
+        :class="{ active: index === i }"
+      ></span>
     </div>
   </div>
 </template>
 
 <script>
+import { ref, watch } from "vue";
 export default {
-}
+  props: {
+    sliders: {
+      type: Array,
+      default: () => [],
+    },
+
+    autoPlay: {
+      tyle: Boolean,
+      default: false,
+    },
+
+    duration: {
+      type: Number,
+      default: 3000,
+    },
+  },
+  setup(props) {
+    const index = ref(0);
+
+    var timer = null;
+    const autoPlayFn = () => {
+      clearInterval(timer);
+      timer = setInterval(() => {
+        index.value++;
+        if (index.value >= props.sliders.length) {
+          index.value = 0;
+        }
+      }, props.duration);
+    };
+
+    watch(
+      () => props.sliders,
+      (newValue) => {
+        if (newValue.length && props.autoPlay) {
+          autoPlayFn();
+        }
+      },
+      { immediate: true }
+    );
+
+    const stop = () => {
+      if (timer) clearInterval(timer);
+    };
+
+    const start = () => {
+      if (props.sliders.length && props.autoPlay) {
+        autoPlayFn();
+      }
+    };
+
+    const toggle = (step) => {
+      const newIndex = index.value + step;
+      if (newIndex > props.sliders.length - 1) {
+        index.value = 0;
+        return;
+      }
+      if (newIndex < 0) {
+        index.value = props.sliders.length - 1;
+        return;
+      }
+
+      index.value = newIndex;
+    };
+    return {
+      index,
+      stop,
+      start,
+      toggle,
+    };
+  },
+};
 </script>
 <style scoped lang="less">
-.xtx-carousel{
+.xtx-carousel {
   width: 100%;
   height: 100%;
   min-width: 300px;
   min-height: 150px;
   position: relative;
-  .carousel{
+  .carousel {
     &-body {
       width: 100%;
       height: 100%;
@@ -59,21 +144,21 @@ export default {
         display: inline-block;
         width: 12px;
         height: 12px;
-        background: rgba(0,0,0,0.2);
+        background: rgba(0, 0, 0, 0.2);
         border-radius: 50%;
         cursor: pointer;
         ~ span {
           margin-left: 12px;
         }
         &.active {
-          background:  #fff;
+          background: #fff;
         }
       }
     }
     &-btn {
       width: 44px;
       height: 44px;
-      background: rgba(0,0,0,.2);
+      background: rgba(0, 0, 0, 0.2);
       color: #fff;
       border-radius: 50%;
       position: absolute;
@@ -83,10 +168,10 @@ export default {
       line-height: 44px;
       opacity: 0;
       transition: all 0.5s;
-      &.prev{
+      &.prev {
         left: 20px;
       }
-      &.next{
+      &.next {
         right: 20px;
       }
     }

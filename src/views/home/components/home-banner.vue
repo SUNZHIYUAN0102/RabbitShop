@@ -1,12 +1,23 @@
 <template>
   <div class="home-banner">
-      <xtx-carousel></xtx-carousel>
+    <xtx-carousel :auto-play="true" :sliders="sliders"></xtx-carousel>
   </div>
 </template>
 <script>
+import { findBanner } from "@/api/home.js";
+import { ref } from "vue";
 export default {
+  setup() {
+    const sliders = ref([]);
+    findBanner().then((data) => {
+      sliders.value = data.result;
+    });
 
-}
+    return {
+      sliders,
+    };
+  },
+};
 </script>
 <style scoped lang="less">
 .home-banner {
@@ -25,5 +36,4 @@ export default {
     }
   }
 }
-
 </style>
