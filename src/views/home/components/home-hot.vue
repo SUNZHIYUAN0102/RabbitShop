@@ -1,15 +1,19 @@
 <template>
   <div class="home-hot">
     <home-panel title="人气推荐" sub-title="人气爆款 不容错过">
-      <ul class="goods-list">
-        <li v-for="item in goods" :key="item.id">
-          <router-link :to="`/product/${item.id}`">
-            <img :src="item.picture" alt="" />
-            <p class="name">{{ item.title }}</p>
-            <p class="desc">{{ item.alt }}</p>
-          </router-link>
-        </li>
-      </ul>
+      <transition name="fade">
+        <ul v-if="goods.length" class="goods-list">
+          <li v-for="item in goods" :key="item.id">
+            <router-link :to="`/product/${item.id}`">
+              <img :src="item.picture" alt="" />
+              <p class="name">{{ item.title }}</p>
+              <p class="desc">{{ item.alt }}</p>
+            </router-link>
+          </li>
+        </ul>
+
+        <home-skeleton v-else></home-skeleton>
+      </transition>
     </home-panel>
   </div>
 </template>
@@ -17,6 +21,7 @@
 
 <script>
 import homePanel from "./home-panel.vue";
+import homeSkeleton from "./home-skeleton.vue";
 import { findHot } from "@/api/home.js";
 import { ref } from "vue";
 export default {
@@ -32,6 +37,7 @@ export default {
   },
   components: {
     homePanel,
+    homeSkeleton,
   },
 };
 </script>
