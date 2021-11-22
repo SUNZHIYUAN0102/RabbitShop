@@ -1,7 +1,8 @@
 import { useIntersectionObserver } from '@vueuse/core'
 import { ref } from 'vue'
 
-export const useLazyData = (target, apiFn) => {
+export const useLazyData = (apiFn) => {
+    const target = ref(null)
     const result = ref([])
     const { stop } = useIntersectionObserver(
         target,
@@ -15,5 +16,5 @@ export const useLazyData = (target, apiFn) => {
         },
     )
 
-    return result
+    return { target, result }
 }

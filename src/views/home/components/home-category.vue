@@ -94,7 +94,7 @@ export default {
       return menuList.value.find((item) => item.id === categoryId.value);
     });
 
-    findBrand().then((data) => {
+    findBrand({limit:6}).then((data) => {
       brand.brands = data.result;
     });
 

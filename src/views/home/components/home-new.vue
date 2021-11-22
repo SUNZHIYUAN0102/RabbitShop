@@ -33,8 +33,7 @@ import { ref } from "vue";
 export default {
   setup() {
     const goods = ref([]);
-    const target = ref(null);
-    const result = useLazyData(target, findNew);
+    const { target, result } = useLazyData(findNew);
     return {
       goods: result,
       target,
