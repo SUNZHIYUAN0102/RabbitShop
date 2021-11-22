@@ -10,7 +10,7 @@
       <div class="box">
         <router-link class="cover" :to="`/category/${cate.id}`">
           <img
-            :src="cate.picture"
+            v-lazyload="cate.picture"
             alt=""
           />
           <strong class="label">
