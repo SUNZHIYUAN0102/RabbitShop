@@ -5,19 +5,21 @@
         <xtx-more path="/"></xtx-more>
       </template>
 
-      <transition name="fade">
-        <ul v-if="goods.length" class="goods-list">
-          <li v-for="item in goods" :key="item.id">
-            <router-link :to="`/product/${item.id}`">
-              <img :src="item.picture" alt="" />
-              <p class="name ellipsis">{{ item.name }}</p>
-              <p class="price">&yen;{{ item.price }}</p>
-            </router-link>
-          </li>
-        </ul>
+      <div ref="target" style="position: relative; height: 426px">
+        <transition name="fade">
+          <ul v-if="goods.length" class="goods-list">
+            <li v-for="item in goods" :key="item.id">
+              <router-link :to="`/product/${item.id}`">
+                <img :src="item.picture" alt="" />
+                <p class="name ellipsis">{{ item.name }}</p>
+                <p class="price">&yen;{{ item.price }}</p>
+              </router-link>
+            </li>
+          </ul>
 
-        <home-skeleton bg="f0f9f4" v-else></home-skeleton>
-      </transition>
+          <home-skeleton bg="f0f9f4" v-else></home-skeleton>
+        </transition>
+      </div>
     </home-panel>
   </div>
 </template>
@@ -26,16 +28,16 @@
 import homePanel from "./home-panel.vue";
 import homeSkeleton from "./home-skeleton.vue";
 import { findNew } from "@/api/home.js";
+import { useLazyData } from "@/hooks/index.js";
 import { ref } from "vue";
 export default {
   setup() {
     const goods = ref([]);
-    findNew().then((data) => {
-      goods.value = data.result;
-    });
-
+    const target = ref(null);
+    const result = useLazyData(target, findNew);
     return {
-      goods,
+      goods: result,
+      target,
     };
   },
   components: {
@@ -46,19 +48,6 @@ export default {
 </script>
 
 <style scoped lang="less">
-.fade {
-  &-leave {
-    &-active {
-      position: absolute;
-      width: 100%;
-      transition: opacity .5s 0.2s;
-      z-index: 1;
-    }
-    &-to {
-      opacity: 0;
-    }
-  }
-}
 .goods-list {
   display: flex;
   justify-content: space-between;
