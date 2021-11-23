@@ -6,6 +6,7 @@
 </template>
 <script>
 export default {
+  name: 'xtxBreadItem',
   props: {
     to: {
       type: [String, Object],

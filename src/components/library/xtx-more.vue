@@ -7,6 +7,7 @@
 
 <script>
 export default {
+  name: 'xtxMore',
   props: {
     path: {
       type: String,

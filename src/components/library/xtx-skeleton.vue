@@ -9,6 +9,7 @@
 </template>
 <script>
 export default {
+  name: 'xtxSkeleton',
   props: {
     bg: {
       type: String,
