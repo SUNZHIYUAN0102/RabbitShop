@@ -1,7 +1,11 @@
 <template>
     <div class="top-category">
         <div class="container">
-            <xtx-bread parentPath='/category/1005000' parentName="电器"></xtx-bread>
+            <xtx-bread>
+                <xtx-bread-item to="/">首页</xtx-bread-item>
+                <xtx-bread-item>电器</xtx-bread-item>
+                <xtx-bread-item>手机</xtx-bread-item>
+            </xtx-bread>
         </div>
     </div>
 </template>

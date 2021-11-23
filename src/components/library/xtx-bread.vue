@@ -1,36 +1,21 @@
-<template>
-  <div class="xtx-bread">
-    <div class="xtx-bread-item">
-      <router-link to="/">首页</router-link>
-    </div>
-    <i class="iconfont icon-angle-right"></i>
-    <div class="xtx-bread-item" v-if="parentName">
-      <router-link v-if="parentPath" :to="parentPath">{{parentName}}</router-link>
-      <span v-else>{{parentName}}</span>
-    </div>
-    <i v-if="parentName" class="iconfont icon-angle-right"></i>
-    <div class="xtx-bread-item">
-      <span><slot/></span>
-    </div>
-  </div>
-</template>
 
 <script>
+import { h } from "vue";
 export default {
-  props: {
-    parentPath: {
-      type: [String, Object],
-      default: "/",
-    },
-    parentName: {
-      type: String,
-      default: "",
-    },
+  render() {
+    const items = this.$slots.default();
+    const dynamicItems = [];
+    items.forEach((item, i) => {
+      dynamicItems.push(item);
+      if (i < (items.length - 1))
+        dynamicItems.push(h("i", { class: "iconfont icon-angle-right" }));
+    });
+    return h("div", { class: "xtx-bread" }, dynamicItems);
   },
 };
 </script>
 
-<style scoped lang='less'>
+<style lang='less'>
 .xtx-bread {
   display: flex;
   padding: 25px 10px;
