@@ -4,7 +4,9 @@
       <xtx-bread>
         <xtx-bread-item to="/">首页</xtx-bread-item>
         <transition name="fade-right" mode="out-in">
-          <xtx-bread-item :key="topCategory.id">{{ topCategory.name }}</xtx-bread-item>
+          <xtx-bread-item :key="topCategory.id">{{
+            topCategory.name
+          }}</xtx-bread-item>
         </transition>
       </xtx-bread>
 
@@ -78,7 +80,9 @@ export default {
     watch(
       () => route.params.id,
       (newVal) => {
-        newVal && getSubList();
+        if(newVal && `/category/${newVal}`===route.path){
+            getSubList()
+        }
       },
       { immediate: true }
     );
@@ -93,22 +97,6 @@ export default {
 </script>
 
 <style scoped lang="less">
-.fade-right-enter-to,
-.fade-right-leave-from {
-  opacity: 1;
-  transform: none;
-}
-.fade-right-enter-active,
-.fade-right-leave-active {
-  transition: all 0.5s;
-}
-.fade-right-enter-from,
-.fade-right-leave-to {
-  opacity: 0;
-  transform: translate3d(20px, 0, 0);
-}
-
-
 .top-category {
   h3 {
     font-size: 28px;
