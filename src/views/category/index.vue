@@ -80,8 +80,8 @@ export default {
     watch(
       () => route.params.id,
       (newVal) => {
-        if(newVal && `/category/${newVal}`===route.path){
-            getSubList()
+        if (newVal && `/category/${newVal}` === route.path) {
+          getSubList();
         }
       },
       { immediate: true }
