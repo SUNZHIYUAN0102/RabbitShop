@@ -3,13 +3,11 @@
     <div class="container">
       <xtx-bread>
         <xtx-bread-item to="/">首页</xtx-bread-item>
-        <xtx-bread-item v-if="topCategory">{{
-          topCategory.name
-        }}</xtx-bread-item>
+        <xtx-bread-item>{{ topCategory.name }}</xtx-bread-item>
       </xtx-bread>
 
       <xtx-carousel :sliders="sliders" :autoPlay="true" style="height: 500px" />
-      <div class="sub-list" v-if="topCategory && topCategory.children">
+      <div class="sub-list">
         <h3>全部分类</h3>
         <ul>
           <li v-for="sub in topCategory.children" :key="sub.id">
@@ -20,16 +18,36 @@
           </li>
         </ul>
       </div>
+
+      <div class="ref-goods" v-for="sub in subList" :key="sub.id">
+        <div class="head">
+          <h3>- {{ sub.name }} -</h3>
+          <p class="tag">品质之选</p>
+          <xtx-more :path="`category/sub/${sub.id}`" />
+        </div>
+        <div class="body">
+          <goods-item
+            v-for="goods in sub.goods"
+            :key="goods.id"
+            :goods="goods"
+          ></goods-item>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 import { findBanner } from "@/api/home.js";
+import { findTopCategory } from "@/api/category.js";
+import goodsItem from "./components/goods-item.vue";
 export default {
+  components: {
+    goodsItem,
+  },
   setup() {
     const sliders = ref([]);
     findBanner().then((data) => {
@@ -39,14 +57,34 @@ export default {
     const store = useStore();
     const route = useRoute();
     const topCategory = computed(() => {
-      return store.state.category.list.find((item) => 
-         item.id === route.params.id
+      let cate = {};
+      const item = store.state.category.list.find(
+        (item) => item.id === route.params.id
       );
+
+      if (item) cate = item;
+      return cate;
     });
+
+    const subList = ref([]);
+    const getSubList = () => {
+      findTopCategory(route.params.id).then((data) => {
+        subList.value = data.result.children;
+      });
+    };
+
+    watch(
+      () => route.params.id,
+      (newVal) => {
+        newVal && getSubList();
+      },
+      { immediate: true }
+    );
 
     return {
       sliders,
       topCategory,
+      subList,
     };
   },
 };
@@ -88,6 +126,32 @@ export default {
         }
       }
     }
+  }
+}
+
+.ref-goods {
+  background-color: #fff;
+  margin-top: 20px;
+  position: relative;
+  .head {
+    .xtx-more {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+    .tag {
+      text-align: center;
+      color: #999;
+      font-size: 20px;
+      position: relative;
+      top: -20px;
+    }
+  }
+  .body {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    padding: 0 65px 30px;
   }
 }
 </style>
