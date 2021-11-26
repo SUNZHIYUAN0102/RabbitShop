@@ -32,7 +32,6 @@ export default {
           }
         }
       });
-      console.log(cate);
       return cate;
     });
 
