@@ -3,7 +3,7 @@
     <div class="container">
       <sub-bread></sub-bread>
       <sub-filter></sub-filter>
-      <xtx-checkbox v-model="isAllChecked">hh</xtx-checkbox>
+      <xtx-checkbox v-model="isAllChecked">hh</xtx-checkbox>{{isAllChecked}}
     </div>
   </div>
 </template>

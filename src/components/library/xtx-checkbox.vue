@@ -7,6 +7,7 @@
 </template>
 <script>
 import { ref, watch } from "vue";
+import { useVModel } from "@vueuse/core";
 export default {
   name: "xtxCheckbox",
   props: {
@@ -16,23 +17,15 @@ export default {
     },
   },
   setup(props, { emit }) {
-    const checked = ref(false);
+    const checked = useVModel(props, "modelValue", emit);
+    const changeChecked = ()=>{
+        const newVal = !checked.value
+        checked.value = newVal
+    }
 
-    const changeChecked = () => {
-      checked.value = !checked.value;
-      emit("update:modelValue", checked.value);
-    };
-
-    watch(
-      () => props.modelValue,
-      () => {
-        checked.value = props.modelValue;
-      },
-      { immediate: true }
-    );
     return {
       checked,
-      changeChecked,
+      changeChecked
     };
   },
 };
