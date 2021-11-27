@@ -26,7 +26,7 @@
           >{{ prop.name }}</a
         >
       </div>
-    </div>
+    </div> 
   </div>
 
   <div v-else class="sub-filter">

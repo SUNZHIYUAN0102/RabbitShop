@@ -1,22 +1,28 @@
 <template>
-    <div class="sub-category">
-        <div class="container">
-            <sub-bread></sub-bread>
-            <sub-filter></sub-filter>
-        </div>
+  <div class="sub-category">
+    <div class="container">
+      <sub-bread></sub-bread>
+      <sub-filter></sub-filter>
+      <xtx-checkbox v-model="isAllChecked">hh</xtx-checkbox>
     </div>
+  </div>
 </template>
 
 <script>
-import subBread from './components/sub-bread.vue'
-import SubFilter from './components/sub-filter.vue'
+import subBread from "./components/sub-bread.vue";
+import SubFilter from "./components/sub-filter.vue";
+import { ref } from "vue";
 export default {
-    setup() {
-        
-    },
-    components:{
-        subBread,
-        SubFilter
+  setup() {
+    const isAllChecked = ref(true);
+
+    return{
+        isAllChecked
     }
-}
+  },
+  components: {
+    subBread,
+    SubFilter,
+  },
+};
 </script>
