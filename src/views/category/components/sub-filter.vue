@@ -8,7 +8,7 @@
           href="javascript:;"
           v-for="item in filterData.brands"
           :key="item.id"
-          @click="filterData.brands.selectedBrand = item.id"
+          @click="changeBrand(item.id)"
           >{{ item.name }}</a
         >
       </div>
@@ -19,14 +19,14 @@
       <div class="body">
         <a
           href="javascript:;"
-          @click="item.selectedAttr = prop.id"
+          @click="changeProp(item, prop.id)"
           :class="{ active: prop.id === item.selectedAttr }"
           v-for="prop in item.properties"
           :key="prop.id"
           >{{ prop.name }}</a
         >
       </div>
-    </div> 
+    </div>
   </div>
 
   <div v-else class="sub-filter">
@@ -38,11 +38,11 @@
   </div>
 </template>
 <script>
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { findSubCategoryFilter } from "@/api/category.js";
 export default {
-  setup() {
+  setup(props, { emit }) {
     const filterData = ref(null);
     const filterLoading = ref(false);
     const route = useRoute();
@@ -70,9 +70,39 @@ export default {
       }
     );
 
+    const getFilterParams = () => {
+      const obj = { brandId: null, attrs: [] };
+      obj.brandId = filterData.value.brands.selectedBrand;
+      filterData.value.saleProperties.forEach((item) => {
+        if (item.selectedAttr) {
+          const prop = item.properties.find(
+            (prop) => prop.id == item.selectedAttr
+          );
+
+          obj.attrs.push({ groupName: item.name, propertyName: prop.name });
+        }
+      });
+      if (obj.attrs.length === 0) obj.attrs = null;
+      return obj;
+    };
+
+    const changeBrand = (brandId) => {
+      if (filterData.value.brands.selectedBrand === brandId) return;
+      filterData.value.brands.selectedBrand = brandId;
+      emit("filter-change", getFilterParams());
+    };
+
+    const changeProp = (item, propId) => {
+      if (item.selectedAttr === propId) return;
+      item.selectedAttr = propId;
+      emit("filter-change", getFilterParams());
+    };
+
     return {
       filterData,
       filterLoading,
+      changeBrand,
+      changeProp,
     };
   },
 };

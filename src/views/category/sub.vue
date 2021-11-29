@@ -2,7 +2,7 @@
   <div class="sub-category">
     <div class="container">
       <sub-bread></sub-bread>
-      <sub-filter></sub-filter>
+      <sub-filter @filter-change="filterChange"></sub-filter>
       <div class="goods-list">
         <sub-sort @sort-change="sortChange"></sub-sort>
         <ul>
@@ -77,12 +77,20 @@ export default {
       goodsList.value = [];
     };
 
+    const filterChange = (filterParams) => {
+      finished.value = false;
+      reqParams = { ...reqParams, ...filterParams };
+      reqParams.page = 1;
+      goodsList.value = [];
+    };
+
     return {
       getData,
       loading,
       finished,
       goodsList,
       sortChange,
+      filterChange,
     };
   },
   components: {
