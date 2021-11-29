@@ -4,7 +4,7 @@
       <sub-bread></sub-bread>
       <sub-filter></sub-filter>
       <div class="goods-list">
-        <sub-sort></sub-sort>
+        <sub-sort @sort-change="sortChange"></sub-sort>
         <ul>
           <li v-for="goods in goodsList" :key="goods.id">
             <goods-item :goods="goods" />
@@ -70,11 +70,19 @@ export default {
       { immediate: true }
     );
 
+    const sortChange = (sortParams) => {
+      finished.value = false;
+      reqParams = { ...reqParams, ...sortParams };
+      reqParams.page = 1;
+      goodsList.value = [];
+    };
+
     return {
       getData,
       loading,
       finished,
       goodsList,
+      sortChange,
     };
   },
   components: {

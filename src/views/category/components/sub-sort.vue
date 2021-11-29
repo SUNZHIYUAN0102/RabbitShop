@@ -46,8 +46,10 @@
       </a>
     </div>
     <div class="check">
-      <xtx-checkbox v-model="sortParams.inventory">仅显示有货商品</xtx-checkbox>
-      <xtx-checkbox v-model="sortParams.onlyDiscount"
+      <xtx-checkbox @change="changeCheck" v-model="sortParams.inventory"
+        >仅显示有货商品</xtx-checkbox
+      >
+      <xtx-checkbox @change="changeCheck" v-model="sortParams.onlyDiscount"
         >仅显示特惠商品</xtx-checkbox
       >
     </div>
@@ -56,7 +58,7 @@
 <script>
 import { reactive } from "vue";
 export default {
-  setup() {
+  setup(props, { emit }) {
     const sortParams = reactive({
       inventory: false,
       onlyDiscount: false,
@@ -73,16 +75,23 @@ export default {
           sortParams.sortMethod =
             sortParams.sortMethod === "desc" ? "asc" : "desc";
         }
-      }else{
-          if(sortParams.sortField === sortField) return
-          sortParams.sortField = sortField;
-          sortParams.sortMethod == null
+      } else {
+        if (sortParams.sortField === sortField) return;
+        sortParams.sortField = sortField;
+        sortParams.sortMethod == null;
       }
+
+      emit("sort-change", sortParams);
+    };
+
+    const changeCheck = () => {
+      emit("sort-change", sortParams);
     };
 
     return {
       sortParams,
       changeSort,
+      changeCheck,
     };
   },
 };
