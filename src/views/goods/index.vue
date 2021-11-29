@@ -1,25 +1,26 @@
 <template>
-  <div class="xtx-goods-page">
+  <div class="xtx-goods-page" v-if="goods">
     <div class="container">
       <xtx-bread>
         <xtx-bread-item to="/">首页</xtx-bread-item>
-        <xtx-bread-item
-          v-if="goods"
-          :to="`/category/${goods.categories[1].id}`"
-          >{{ goods.categories[1].name }}</xtx-bread-item
-        >
+        <xtx-bread-item :to="`/category/${goods.categories[1].id}`">{{
+          goods.categories[1].name
+        }}</xtx-bread-item>
 
-        <xtx-bread-item
-          v-if="goods"
-          :to="`/category/sub/${goods.categories[0].id}`"
-          >{{ goods.categories[0].name }}</xtx-bread-item
-        >
+        <xtx-bread-item :to="`/category/sub/${goods.categories[0].id}`">{{
+          goods.categories[0].name
+        }}</xtx-bread-item>
 
-        <xtx-bread-item v-if="goods">{{ goods.name }}</xtx-bread-item>
+        <xtx-bread-item>{{ goods.name }}</xtx-bread-item>
       </xtx-bread>
-      <div class="goods-info"></div>
+      <div class="goods-info">
+        <div class="media">
+          <goods-image :images="goods.mainPictures"></goods-image>
+        </div>
+        <div class="spec"></div>
+      </div>
 
-      <goods-relevant v-if="goods"></goods-relevant>
+      <goods-relevant></goods-relevant>
       <div class="goods-footer">
         <div class="goods-article">
           <div class="goods-tabs"></div>
@@ -36,8 +37,9 @@ import { nextTick, ref, watch } from "vue";
 import { findGoods } from "@/api/product.js";
 import goodsRelevant from "./components/goods-relevant.vue";
 import { useRoute } from "vue-router";
+import goodsImage from "./components/goods-image.vue";
 export default {
-  components: { goodsRelevant },
+  components: { goodsRelevant, goodsImage },
 
   setup() {
     const goods = useGoods();
@@ -73,6 +75,16 @@ const useGoods = () => {
 .goods-info {
   min-height: 600px;
   background: #fff;
+  display: flex;
+  .media {
+    width: 580px;
+    height: 600px;
+    padding: 30px 50px;
+  }
+  .spec {
+    flex: 1;
+    padding: 30px 30px 30px 0;
+  }
 }
 .goods-footer {
   display: flex;
