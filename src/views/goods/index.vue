@@ -16,8 +16,11 @@
       <div class="goods-info">
         <div class="media">
           <goods-image :images="goods.mainPictures"></goods-image>
+          <goods-sale></goods-sale>
         </div>
-        <div class="spec"></div>
+        <div class="spec">
+          <goods-name :goods="goods"></goods-name>
+        </div>
       </div>
 
       <goods-relevant></goods-relevant>
@@ -38,8 +41,10 @@ import { findGoods } from "@/api/product.js";
 import goodsRelevant from "./components/goods-relevant.vue";
 import { useRoute } from "vue-router";
 import goodsImage from "./components/goods-image.vue";
+import goodsSale from "./components/goods-sales.vue";
+import goodsName from "./components/goods-name.vue";
 export default {
-  components: { goodsRelevant, goodsImage },
+  components: { goodsRelevant, goodsImage, goodsSale, goodsName },
 
   setup() {
     const goods = useGoods();
