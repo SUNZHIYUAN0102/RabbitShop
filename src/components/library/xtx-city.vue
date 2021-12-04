@@ -6,21 +6,36 @@
       <i class="iconfont icon-angle-down"></i>
     </div>
     <div class="option" v-if="visible">
-      <span class="ellipsis">北京市</span>
+      <div class="loading" v-if="loading"></div>
+      <template v-else>
+        <span class="ellipsis" v-for="item in currList" :key="item.code">{{
+          item.name
+        }}</span>
+      </template>
     </div>
   </div>
 </template>
 
 <script>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { onClickOutside } from "@vueuse/core";
+import axios from "axios";
 export default {
   name: "xtxCity",
   setup() {
     const visible = ref(false);
 
+    const allCityData = ref([]);
+
+    const loading = ref(false);
+
     const open = () => {
       visible.value = true;
+      loading.value = true;
+      getCityData().then((data) => {
+        allCityData.value = data;
+        loading.value = false;
+      });
     };
 
     const close = () => {
@@ -35,12 +50,35 @@ export default {
 
     onClickOutside(target, () => close());
 
+    const currList = computed(() => {
+      const list = allCityData.value;
+      return list;
+    });
+
     return {
       visible,
       toggle,
       target,
+      loading,
+      currList,
     };
   },
+};
+
+const getCityData = () => {
+  return new Promise((resolve, reject) => {
+    if (window.cityData) {
+      resolve(window.cityData);
+    } else {
+      axios
+        .get(
+          "https://yjy-oss-files.oss-cn-zhangjiakou.aliyuncs.com/tuxian/area.json"
+        )
+        .then((res) => {
+          resolve(res.data);
+        });
+    }
+  });
 };
 </script>
 
@@ -53,6 +91,7 @@ export default {
     border: 1px solid #e4e4e4;
     height: 30px;
     padding: 0 5px;
+    margin-left: 5px;
     line-height: 28px;
     cursor: pointer;
     &.active {
@@ -82,6 +121,11 @@ export default {
     display: flex;
     flex-wrap: wrap;
     padding: 10px;
+    .loading {
+      height: 290px;
+      width: 100%;
+      background: url(../../assets/images/loading.gif) no-repeat center;
+    }
     > span {
       width: 130px;
       text-align: center;
