@@ -1,28 +1,38 @@
 <template>
   <div class="xtx-city" ref="target">
     <div class="select" @click="toggle" :class="{ active: visible }">
-      <span class="placeholder">请选择配送地址</span>
-      <span class="value"></span>
+      <span v-if="!fullLocation" class="placeholder">请选择配送地址</span>
+      <span v-else class="value">{{ fullLocation }}</span>
       <i class="iconfont icon-angle-down"></i>
     </div>
     <div class="option" v-if="visible">
       <div class="loading" v-if="loading"></div>
       <template v-else>
-        <span class="ellipsis" v-for="item in currList" :key="item.code">{{
-          item.name
-        }}</span>
+        <span
+          class="ellipsis"
+          @click="changeItem(item)"
+          v-for="item in currList"
+          :key="item.code"
+          >{{ item.name }}</span
+        >
       </template>
     </div>
   </div>
 </template>
 
 <script>
-import { computed, ref } from "vue";
+import { computed, reactive, ref } from "vue";
 import { onClickOutside } from "@vueuse/core";
 import axios from "axios";
 export default {
   name: "xtxCity",
-  setup() {
+  props: {
+    fullLocation: {
+      type: String,
+      default: "",
+    },
+  },
+  setup(props, { emit }) {
     const visible = ref(false);
 
     const allCityData = ref([]);
@@ -36,6 +46,10 @@ export default {
         allCityData.value = data;
         loading.value = false;
       });
+
+      for (const key in changeResult) {
+        changeResult[key] = "";
+      }
     };
 
     const close = () => {
@@ -51,9 +65,48 @@ export default {
     onClickOutside(target, () => close());
 
     const currList = computed(() => {
-      const list = allCityData.value;
+      let list = allCityData.value;
+      if (changeResult.provinceCode && changeResult.provinceName) {
+        list = list.find((x) => x.code === changeResult.provinceCode).areaList;
+      }
+
+      if (changeResult.cityCode && changeResult.cityName) {
+        list = list.find((x) => x.code === changeResult.cityCode).areaList;
+      }
+
       return list;
     });
+
+    const changeResult = reactive({
+      provinceCode: "",
+      provinceName: "",
+      cityCode: "",
+      cityName: "",
+      countyCode: "",
+      countyName: "",
+      fullLocation: "",
+    });
+
+    const changeItem = (item) => {
+      if (item.level === 0) {
+        changeResult.provinceCode = item.code;
+        changeResult.provinceName = item.name;
+      }
+
+      if (item.level === 1) {
+        changeResult.cityCode = item.code;
+        changeResult.cityName = item.name;
+      }
+
+      if (item.level === 2) {
+        changeResult.countyCode = item.code;
+        changeResult.countyName = item.name;
+
+        changeResult.fullLocation = `${changeResult.provinceName} ${changeResult.cityName} ${changeResult.countyName}`;
+        close();
+        emit("change", changeResult);
+      }
+    };
 
     return {
       visible,
@@ -61,6 +114,7 @@ export default {
       target,
       loading,
       currList,
+      changeItem,
     };
   },
 };
