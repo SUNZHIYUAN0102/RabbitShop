@@ -20,6 +20,7 @@
         </div>
         <div class="spec">
           <goods-name :goods="goods"></goods-name>
+          <goods-sku></goods-sku>
         </div>
       </div>
 
@@ -43,8 +44,9 @@ import { useRoute } from "vue-router";
 import goodsImage from "./components/goods-image.vue";
 import goodsSale from "./components/goods-sales.vue";
 import goodsName from "./components/goods-name.vue";
+import goodsSku from "./components/goods-sku.vue";
 export default {
-  components: { goodsRelevant, goodsImage, goodsSale, goodsName },
+  components: { goodsRelevant, goodsImage, goodsSale, goodsName, goodsSku },
 
   setup() {
     const goods = useGoods();
