@@ -9,10 +9,10 @@
             v-if="val.picture"
             :src="val.picture"
             :title="val.name"
-            :class="{ selected: val.selected }"
+            :class="{ selected: val.selected, disabled: val.disabled }"
           />
           <span
-            :class="{ selected: val.selected }"
+            :class="{ selected: val.selected, disabled: val.disabled }"
             @click="changeSku(item, val)"
             v-else
             >{{ val.name }}</span
@@ -25,24 +25,47 @@
 <script>
 import powerSet from "@/vender/power-set.js";
 const getPathMap = (skus) => {
-  const pathMap = {}
+  const pathMap = {};
   skus.forEach((sku) => {
     if (sku.inventory > 0) {
       const valueArr = sku.specs.map((val) => val.valueName);
-      
-      const valueArrPowerSet = powerSet(valueArr)
-      valueArrPowerSet.forEach(arr=>{
-        const key = arr.join('★')
-        if(pathMap[key]){
-          pathMap[key].push(sku.id)
-        }else{
-          pathMap[key] = [sku.id]
+
+      const valueArrPowerSet = powerSet(valueArr);
+      valueArrPowerSet.forEach((arr) => {
+        const key = arr.join("★");
+        if (pathMap[key]) {
+          pathMap[key].push(sku.id);
+        } else {
+          pathMap[key] = [sku.id];
         }
-      })
+      });
     }
   });
 
-  return pathMap
+  return pathMap;
+};
+
+const getSelectedValues = (specs) => {
+  const arr = [];
+  specs.forEach((item) => {
+    const selectedVal = item.values.find((val) => val.selected);
+    arr.push(selectedVal ? selectedVal.name : undefined);
+  });
+
+  return arr;
+};
+
+const updateDisabledStatus = (specs, pathMap) => {
+  specs.forEach((item, i) => {
+    const selectedValues = getSelectedValues(specs);
+    item.values.forEach((val) => {
+      if (val.selected) return;
+      selectedValues[i] = val.name;
+
+      const key = selectedValues.filter((value) => value).join("★");
+      val.disabled = !pathMap[key];
+    });
+  });
 };
 
 export default {
@@ -55,8 +78,10 @@ export default {
   setup(props) {
     const pathMap = getPathMap(props.goods.skus);
 
-    console.log(pathMap);
+    updateDisabledStatus(props.goods.specs, pathMap);
     const changeSku = (item, val) => {
+      if (val.disabled) return;
+
       if (val.selected) {
         val.selected = !val.selected;
       } else {
@@ -65,6 +90,8 @@ export default {
         });
         val.selected = true;
       }
+
+      updateDisabledStatus(props.goods.specs, pathMap);
     };
 
     return {
