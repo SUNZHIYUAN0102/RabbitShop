@@ -23,6 +23,28 @@
   </div>
 </template>
 <script>
+import powerSet from "@/vender/power-set.js";
+const getPathMap = (skus) => {
+  const pathMap = {}
+  skus.forEach((sku) => {
+    if (sku.inventory > 0) {
+      const valueArr = sku.specs.map((val) => val.valueName);
+      
+      const valueArrPowerSet = powerSet(valueArr)
+      valueArrPowerSet.forEach(arr=>{
+        const key = arr.join('★')
+        if(pathMap[key]){
+          pathMap[key].push(sku.id)
+        }else{
+          pathMap[key] = [sku.id]
+        }
+      })
+    }
+  });
+
+  return pathMap
+};
+
 export default {
   props: {
     goods: {
@@ -30,7 +52,10 @@ export default {
       type: () => ({}),
     },
   },
-  setup() {
+  setup(props) {
+    const pathMap = getPathMap(props.goods.skus);
+
+    console.log(pathMap);
     const changeSku = (item, val) => {
       if (val.selected) {
         val.selected = !val.selected;
