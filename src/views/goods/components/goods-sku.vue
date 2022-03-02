@@ -68,15 +68,32 @@ const updateDisabledStatus = (specs, pathMap) => {
   });
 };
 
+const initDefaultSelected = (goods, skuId) => {
+  const sku = goods.skus.find((sku) => sku.id === skuId);
+
+  goods.specs.forEach((item, i) => {
+    const val = item.values.find((val) => val.name === sku.specs[i].valueName);
+    val.selected = true;
+  });
+};
+
 export default {
   props: {
     goods: {
-      default: Object,
-      type: () => ({}),
+      type: Object,
+      default: () => ({}),
+    },
+    skuId: {
+      type: String,
+      default: "",
     },
   },
   setup(props) {
     const pathMap = getPathMap(props.goods.skus);
+    console.log(props.goods.skus);
+    if (props.skuId) {
+      initDefaultSelected(props.goods, props.skuId);
+    }
 
     updateDisabledStatus(props.goods.specs, pathMap);
     const changeSku = (item, val) => {
@@ -92,6 +109,7 @@ export default {
       }
 
       updateDisabledStatus(props.goods.specs, pathMap);
+
     };
 
     return {
