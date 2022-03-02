@@ -20,7 +20,11 @@
         </div>
         <div class="spec">
           <goods-name :goods="goods"></goods-name>
-          <goods-sku :goods="goods" skuId="300185609"></goods-sku>
+          <goods-sku
+            :goods="goods"
+            :skuId="goods.skus[0].id"
+            @change="changeSku"
+          ></goods-sku>
         </div>
       </div>
 
@@ -50,8 +54,17 @@ export default {
 
   setup() {
     const goods = useGoods();
+
+    const changeSku = (sku) => {
+      if(sku.skuId){
+        goods.value.price = sku.price
+        goods.value.oldPrice = sku.oldPrice
+        goods.value.inventory = sku.inventory
+      }
+    };
     return {
       goods,
+      changeSku,
     };
   },
 };

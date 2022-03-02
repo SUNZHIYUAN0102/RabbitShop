@@ -88,9 +88,8 @@ export default {
       default: "",
     },
   },
-  setup(props) {
+  setup(props, { emit }) {
     const pathMap = getPathMap(props.goods.skus);
-    console.log(props.goods.skus);
     if (props.skuId) {
       initDefaultSelected(props.goods, props.skuId);
     }
@@ -110,6 +109,25 @@ export default {
 
       updateDisabledStatus(props.goods.specs, pathMap);
 
+      const validSelectedValues = getSelectedValues(props.goods.specs).filter(
+        (v) => v
+      );
+      if (validSelectedValues.length === props.goods.specs.length) {
+        const skuIds = pathMap[validSelectedValues.join("★")];
+        const sku = props.goods.skus.find((sku) => sku.id === skuIds[0]);
+        emit("change", {
+          skuId: sku.id,
+          price: sku.price,
+          oldPrice: sku.oldPrice,
+          inventory: sku.inventory,
+          specsText: sku.specs.reduce(
+            (p, c) => `${p} ${c.name}: ${c.valueName}`,
+            ""
+          ).trim(),
+        });
+      } else {
+        emit("change", {});
+      }
     };
 
     return {
