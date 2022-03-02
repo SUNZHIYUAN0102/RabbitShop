@@ -25,6 +25,7 @@
             :skuId="goods.skus[0].id"
             @change="changeSku"
           ></goods-sku>
+          <xtx-numbox v-model="count" :max="goods.inventory"></xtx-numbox>
         </div>
       </div>
 
@@ -56,15 +57,18 @@ export default {
     const goods = useGoods();
 
     const changeSku = (sku) => {
-      if(sku.skuId){
-        goods.value.price = sku.price
-        goods.value.oldPrice = sku.oldPrice
-        goods.value.inventory = sku.inventory
+      if (sku.skuId) {
+        goods.value.price = sku.price;
+        goods.value.oldPrice = sku.oldPrice;
+        goods.value.inventory = sku.inventory;
       }
     };
+
+    const count = ref(1);
     return {
       goods,
       changeSku,
+      count,
     };
   },
 };
