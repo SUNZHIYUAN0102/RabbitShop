@@ -30,7 +30,7 @@
         </div>
       </div>
 
-      <goods-relevant></goods-relevant>
+      <goods-relevant :goodsId="goods.id"></goods-relevant>
       <div class="goods-footer">
         <div class="goods-article">
           <div class="goods-tabs"></div>

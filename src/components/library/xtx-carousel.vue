@@ -7,9 +7,20 @@
         :key="i"
         :class="{ fade: index === i }"
       >
-        <router-link to="/">
+        <router-link v-if="item.imgUrl" to="/">
           <img :src="item.imgUrl" alt="" />
         </router-link>
+        <div v-else class="slider">
+          <RouterLink
+            v-for="goods in item"
+            :key="goods.id"
+            :to="`/product/${goods.id}`"
+          >
+            <img :src="goods.picture" alt="" /> +
+            <p class="name ellipsis">{{ goods.name }}</p>
+            <p class="price">&yen;{{ goods.price }}</p>
+          </RouterLink>
+        </div>
       </li>
     </ul>
     <a @click="toggle(-1)" href="javascript:;" class="carousel-btn prev"
@@ -32,7 +43,7 @@
 <script>
 import { onUnmounted, ref, watch } from "vue";
 export default {
-  name: 'xtxCarousel',
+  name: "xtxCarousel",
   props: {
     sliders: {
       type: Array,
@@ -52,6 +63,7 @@ export default {
   setup(props) {
     const index = ref(0);
 
+    console.log(props.sliders);
     var timer = null;
     const autoPlayFn = () => {
       clearInterval(timer);
@@ -186,5 +198,30 @@ export default {
       opacity: 1;
     }
   }
+
+  .slider {
+  display: flex;
+  justify-content: space-around;
+  padding: 0 40px;
+  > a {
+    width: 240px;
+    text-align: center;
+    img {
+      padding: 20px;
+      width: 230px!important;
+      height: 230px!important;
+    }
+    .name {
+      font-size: 16px;
+      color: #666;
+      padding: 0 40px;
+    }
+    .price {
+      font-size: 16px;
+      color: @priceColor;
+      margin-top: 15px;
+    }
+  }
+}
 }
 </style>
