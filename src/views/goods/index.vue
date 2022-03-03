@@ -36,7 +36,10 @@
           <goods-tab></goods-tab>
           <div class="goods-warn"></div>
         </div>
-        <div class="goods-aside"></div>
+        <div class="goods-aside">
+          <goods-hot></goods-hot>
+          <goods-hot :type="2"></goods-hot>
+        </div>
       </div>
     </div>
   </div>
@@ -52,8 +55,9 @@ import goodsSale from "./components/goods-sales.vue";
 import goodsName from "./components/goods-name.vue";
 import goodsSku from "./components/goods-sku.vue";
 import goodsTab from "./components/goods-tab.vue"
+import goodsHot from './components/goods-hot.vue'
 export default {
-  components: { goodsRelevant, goodsImage, goodsSale, goodsName, goodsSku, goodsTab },
+  components: { goodsRelevant, goodsImage, goodsSale, goodsName, goodsSku, goodsTab, goodsHot },
 
   setup() {
     const goods = useGoods();

@@ -7,3 +7,7 @@ export const findGoods = (id) => {
 export const findRelevantGoods = (id) => {
     return request('/goods/relevant', 'get', { id, limit: 16 })
 }
+
+export const findGoodsHot = (id, type) => {
+    return request('/goods/hot', 'get', { id, limit: 3, type })
+}

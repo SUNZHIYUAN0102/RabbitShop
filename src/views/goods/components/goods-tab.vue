@@ -16,7 +16,7 @@
     </nav>
     <!-- 切换内容的地方 -->
 
-    <component :is="activeName "></component>
+    <component :is="activeName"></component>
   </div>
 </template>
 
