@@ -11,25 +11,27 @@
         @click="activeName = 'GoodsComment'"
         :class="{ active: activeName === 'GoodsComment' }"
         href="javascript:;"
-        >商品评价<span>(500+)</span></a
+        >商品评价<span>({{goods.commentCount}})</span></a
       >
     </nav>
-    <!-- 切换内容的地方 -->
 
-    <component :is="activeName"></component>
+    <goods-detail v-if="activeName === 'GoodsDetail'"></goods-detail>
+    <goods-comment v-if="activeName === 'GoodsComment'"></goods-comment>
   </div>
 </template>
 
 <script>
-import { ref } from "vue-demi";
+import { inject, ref } from "vue-demi";
 import goodsDetail from "./goods-detail.vue";
 import goodsComment from "./goods-comment.vue";
 export default {
   components: { goodsDetail, goodsComment },
   setup() {
     const activeName = ref("GoodsDetail");
+    const goods = inject("goods");
     return {
       activeName,
+      goods
     };
   },
 };

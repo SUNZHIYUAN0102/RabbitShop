@@ -26,7 +26,9 @@
             @change="changeSku"
           ></goods-sku>
           <xtx-numbox v-model="count" :max="goods.inventory"></xtx-numbox>
-          <xtx-button type="primary" style="margin-top:20px">加入购物车</xtx-button>
+          <xtx-button type="primary" style="margin-top: 20px"
+            >加入购物车</xtx-button
+          >
         </div>
       </div>
 
@@ -46,7 +48,7 @@
 </template>
 
 <script>
-import { nextTick, ref, watch } from "vue";
+import { nextTick, provide, ref, watch } from "vue";
 import { findGoods } from "@/api/product.js";
 import goodsRelevant from "./components/goods-relevant.vue";
 import { useRoute } from "vue-router";
@@ -54,10 +56,18 @@ import goodsImage from "./components/goods-image.vue";
 import goodsSale from "./components/goods-sales.vue";
 import goodsName from "./components/goods-name.vue";
 import goodsSku from "./components/goods-sku.vue";
-import goodsTab from "./components/goods-tab.vue"
-import goodsHot from './components/goods-hot.vue'
+import goodsTab from "./components/goods-tab.vue";
+import goodsHot from "./components/goods-hot.vue";
 export default {
-  components: { goodsRelevant, goodsImage, goodsSale, goodsName, goodsSku, goodsTab, goodsHot },
+  components: {
+    goodsRelevant,
+    goodsImage,
+    goodsSale,
+    goodsName,
+    goodsSku,
+    goodsTab,
+    goodsHot,
+  },
 
   setup() {
     const goods = useGoods();
@@ -69,6 +79,8 @@ export default {
         goods.value.inventory = sku.inventory;
       }
     };
+
+    provide("goods", goods)
 
     const count = ref(1);
     return {

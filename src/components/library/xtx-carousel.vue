@@ -62,8 +62,6 @@ export default {
   },
   setup(props) {
     const index = ref(0);
-
-    console.log(props.sliders);
     var timer = null;
     const autoPlayFn = () => {
       clearInterval(timer);
