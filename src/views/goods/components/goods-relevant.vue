@@ -33,8 +33,6 @@ export default {
       }
     });
 
-    console.log(slider);
-
     return {
       slider,
     };

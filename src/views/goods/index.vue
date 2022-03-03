@@ -33,7 +33,7 @@
       <goods-relevant :goodsId="goods.id"></goods-relevant>
       <div class="goods-footer">
         <div class="goods-article">
-          <div class="goods-tabs"></div>
+          <goods-tab></goods-tab>
           <div class="goods-warn"></div>
         </div>
         <div class="goods-aside"></div>
@@ -51,8 +51,9 @@ import goodsImage from "./components/goods-image.vue";
 import goodsSale from "./components/goods-sales.vue";
 import goodsName from "./components/goods-name.vue";
 import goodsSku from "./components/goods-sku.vue";
+import goodsTab from "./components/goods-tab.vue"
 export default {
-  components: { goodsRelevant, goodsImage, goodsSale, goodsName, goodsSku },
+  components: { goodsRelevant, goodsImage, goodsSale, goodsName, goodsSku, goodsTab },
 
   setup() {
     const goods = useGoods();
