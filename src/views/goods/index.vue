@@ -37,7 +37,6 @@
         <div class="goods-article">
           <goods-tab></goods-tab>
           <goods-warn></goods-warn>
-          <div class="goods-warn"></div>
         </div>
         <div class="goods-aside">
           <goods-hot></goods-hot>

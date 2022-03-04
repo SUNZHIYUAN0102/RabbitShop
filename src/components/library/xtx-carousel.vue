@@ -16,7 +16,7 @@
             :key="goods.id"
             :to="`/product/${goods.id}`"
           >
-            <img :src="goods.picture" alt="" /> +
+            <img :src="goods.picture" alt="" />
             <p class="name ellipsis">{{ goods.name }}</p>
             <p class="price">&yen;{{ goods.price }}</p>
           </RouterLink>
