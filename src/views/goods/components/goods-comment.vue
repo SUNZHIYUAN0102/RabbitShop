@@ -1,15 +1,17 @@
 <template>
-    <div class="goods-comment">22</div>
+  <div class="goods-comment">
+
+  </div>
 </template>
 
 <script>
+import { ref } from "vue-demi";
 export default {
-    setup() {
-        
-    },
-}
+  setup() {
+
+  },
+};
 </script>
 
 <style lang="less" scoped>
-
 </style>

@@ -20,8 +20,6 @@ import { inject } from "vue";
 export default {
   setup() {
     const goods = inject("goods");
-
-    console.log(goods);
     return {
       goods,
     };

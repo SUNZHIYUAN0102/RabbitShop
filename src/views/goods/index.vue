@@ -36,6 +36,7 @@
       <div class="goods-footer">
         <div class="goods-article">
           <goods-tab></goods-tab>
+          <goods-warn></goods-warn>
           <div class="goods-warn"></div>
         </div>
         <div class="goods-aside">
@@ -58,6 +59,7 @@ import goodsName from "./components/goods-name.vue";
 import goodsSku from "./components/goods-sku.vue";
 import goodsTab from "./components/goods-tab.vue";
 import goodsHot from "./components/goods-hot.vue";
+import goodsWarn from './components/goods-warn.vue'
 export default {
   components: {
     goodsRelevant,
@@ -67,6 +69,7 @@ export default {
     goodsSku,
     goodsTab,
     goodsHot,
+    goodsWarn
   },
 
   setup() {
