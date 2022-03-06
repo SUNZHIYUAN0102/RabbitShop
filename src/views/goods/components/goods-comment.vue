@@ -73,7 +73,10 @@
             <div class="text">
               {{ item.content }}
             </div>
-            <goods-comment-image v-if="item.pictures.length" :pictures="item.pictures"></goods-comment-image>
+            <goods-comment-image
+              v-if="item.pictures.length"
+              :pictures="item.pictures"
+            ></goods-comment-image>
             <div class="time">
               <span>{{ item.createdTime }}</span>
               <span class="zan"
@@ -85,6 +88,7 @@
         </div>
       </div>
     </div>
+    <xtx-pagination></xtx-pagination>
   </div>
 </template>
 
@@ -92,7 +96,7 @@
 import { ref, inject, reactive, watch } from "vue-demi";
 import { findGoodsCommentInfo } from "@/api/product.js";
 import { findGoodsCommentList } from "@/api/product.js";
-import goodsCommentImage from './goods-comment-image.vue';
+import goodsCommentImage from "./goods-comment-image.vue";
 export default {
   components: { goodsCommentImage },
   setup() {
