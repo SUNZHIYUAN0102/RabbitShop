@@ -85,6 +85,7 @@ export default {
     provide("goods", goods)
 
     const count = ref(1);
+    console.log(count);
     return {
       goods,
       changeSku,

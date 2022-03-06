@@ -28,18 +28,64 @@
       </div>
       <div class="sort">
         <span>排序：</span>
-        <a href="javascript:;" class="active">默认</a>
-        <a href="javascript:;">最新</a>
-        <a href="javascript:;">最热</a>
+        <a
+          @click="reqParams.sortField = null"
+          href="javascript:;"
+          :class="{ active: reqParams.sortField == null }"
+          >默认</a
+        >
+        <a
+          @click="reqParams.sortField = 'createdTime'"
+          href="javascript:;"
+          :class="{ active: reqParams.sortField == 'createdTime' }"
+          >最新</a
+        >
+        <a
+          @click="reqParams.sortField = 'praiseCount'"
+          href="javascript:;"
+          :class="{ active: reqParams.sortField == 'praiseCount' }"
+          >最热</a
+        >
       </div>
-      <div class="list"></div>
+      <div class="list">
+        <div class="item">
+          <div class="user">
+            <img
+              src="http://zhoushugang.gitee.io/erabbit-client-pc-static/uploads/avatar_1.png"
+              alt=""
+            />
+            <span>兔****m</span>
+          </div>
+          <div class="body">
+            <div class="score">
+              <i class="iconfont icon-wjx01"></i>
+              <i class="iconfont icon-wjx01"></i>
+              <i class="iconfont icon-wjx01"></i>
+              <i class="iconfont icon-wjx01"></i>
+              <i class="iconfont icon-wjx02"></i>
+              <span class="attr">颜色：黑色 尺码：M</span>
+            </div>
+            <div class="text">
+              网易云app上这款耳机非常不错 新人下载网易云购买这款耳机优惠大
+              而且耳机🎧确实正品 音质特别好 戴上这款耳机
+              听音乐看电影效果声音真是太棒了 无线方便 小盒自动充电
+              最主要是质量好音质棒 想要买耳机的放心拍 音效巴巴滴 老棒了
+            </div>
+            <div class="time">
+              <span>2020-10-10 10:11:22</span>
+              <span class="zan"><i class="iconfont icon-dianzan"></i>100</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { ref, inject } from "vue-demi";
+import { ref, inject, reactive, watch } from "vue-demi";
 import { findGoodsCommentInfo } from "@/api/product.js";
+import { findGoodsCommentList } from "@/api/product.js";
 export default {
   setup() {
     const commentInfo = ref(null);
@@ -49,10 +95,12 @@ export default {
       data.result.tags.unshift({
         title: "有图",
         tagCount: data.result.hasPictureCount,
+        type: "img",
       });
       data.result.tags.unshift({
         title: "全部评价",
         tagCount: data.result.evaluateCount,
+        type: "all",
       });
       commentInfo.value = data.result;
     });
@@ -61,11 +109,46 @@ export default {
 
     const changeTag = (index) => {
       currentTagIndex.value = index;
+      const tag = commentInfo.value.tags[index];
+      if (tag.type == "all") {
+        reqParams.hasPicture = null;
+        reqParams.tag = null;
+      } else if (tag.type === "img") {
+        reqParams.hasPicture = true;
+        reqParams.tag = null;
+      } else {
+        reqParams.hasPicture = null;
+        reqParams.tag = tag.title;
+      }
     };
+
+    const reqParams = reactive({
+      page: 1,
+      pageSize: 10,
+      hasPicture: null,
+      tag: null,
+      sortField: null,
+    });
+
+    const commentList = ref([]);
+
+    watch(
+      reqParams,
+      () => {
+        reqParams.page = 1;
+        findGoodsCommentList(goods.value.id, reqParams).then((data) => {
+          commentList.value = data.result.items;
+        });
+      },
+      { immediate: true }
+    );
+
     return {
       commentInfo,
       currentTagIndex,
       changeTag,
+      reqParams,
+      commentList
     };
   },
 };
@@ -150,6 +233,51 @@ export default {
       &:hover {
         color: @xtxColor;
       }
+    }
+  }
+}
+.list {
+  padding: 0 20px;
+  .item {
+    display: flex;
+    padding: 25px 10px;
+    border-bottom: 1px solid #f5f5f5;
+    .user {
+      width: 160px;
+      img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        overflow: hidden;
+      }
+      span {
+        padding-left: 10px;
+        color: #666;
+      }
+    }
+    .body {
+      flex: 1;
+      .score {
+        line-height: 40px;
+        .iconfont {
+          color: #ff9240;
+          padding-right: 3px;
+        }
+        .attr {
+          padding-left: 10px;
+          color: #666;
+        }
+      }
+    }
+    .text {
+      color: #666;
+      line-height: 24px;
+    }
+    .time {
+      color: #999;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 5px;
     }
   }
 }

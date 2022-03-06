@@ -16,3 +16,8 @@ export const findGoodsCommentInfo = (id) => {
     //return request(`/goods/${id}/evaluate`, 'get')
     return request(`https://mock.boxuegu.com/mock/1175/goods/${id}/evaluate`, 'get')
 }
+
+
+export const findGoodsCommentList = (id, params) => {
+    return request(`https://mock.boxuegu.com/mock/1175/goods/${id}/evaluate/page`, 'get', { params })
+}
