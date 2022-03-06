@@ -29,51 +29,56 @@
       <div class="sort">
         <span>排序：</span>
         <a
-          @click="reqParams.sortField = null"
+          @click="changeSort(null)"
           href="javascript:;"
           :class="{ active: reqParams.sortField == null }"
           >默认</a
         >
         <a
-          @click="reqParams.sortField = 'createdTime'"
+          @click="changeSort('createdTime')"
           href="javascript:;"
           :class="{ active: reqParams.sortField == 'createdTime' }"
           >最新</a
         >
         <a
-          @click="reqParams.sortField = 'praiseCount'"
+          @click="changeSort('praiseCount')"
           href="javascript:;"
           :class="{ active: reqParams.sortField == 'praiseCount' }"
           >最热</a
         >
       </div>
-      <div class="list">
-        <div class="item">
+      <div class="list" v-if="commentList">
+        <div class="item" v-for="item in commentList" :key="item.id">
           <div class="user">
-            <img
-              src="http://zhoushugang.gitee.io/erabbit-client-pc-static/uploads/avatar_1.png"
-              alt=""
-            />
-            <span>兔****m</span>
+            <img :src="item.member.avatar" alt="" />
+            <span>{{ formatNickname(item.member.nickname) }}</span>
           </div>
           <div class="body">
             <div class="score">
-              <i class="iconfont icon-wjx01"></i>
-              <i class="iconfont icon-wjx01"></i>
-              <i class="iconfont icon-wjx01"></i>
-              <i class="iconfont icon-wjx01"></i>
-              <i class="iconfont icon-wjx02"></i>
-              <span class="attr">颜色：黑色 尺码：M</span>
+              <i
+                v-for="i in item.score"
+                :key="i + 's'"
+                class="iconfont icon-wjx01"
+              ></i>
+
+              <template v-if="item.score != 5">
+                <i
+                  v-for="i in 5 - item.score"
+                  :key="i + 'k'"
+                  class="iconfont icon-wjx02"
+                ></i>
+              </template>
+              <span class="attr">{{ formatSpecs(item.orderInfo.specs) }}</span>
             </div>
             <div class="text">
-              网易云app上这款耳机非常不错 新人下载网易云购买这款耳机优惠大
-              而且耳机🎧确实正品 音质特别好 戴上这款耳机
-              听音乐看电影效果声音真是太棒了 无线方便 小盒自动充电
-              最主要是质量好音质棒 想要买耳机的放心拍 音效巴巴滴 老棒了
+              {{ item.content }}
             </div>
             <div class="time">
-              <span>2020-10-10 10:11:22</span>
-              <span class="zan"><i class="iconfont icon-dianzan"></i>100</span>
+              <span>{{ item.createdTime }}</span>
+              <span class="zan"
+                ><i class="iconfont icon-dianzan"></i
+                >{{ item.praiseCount }}</span
+              >
             </div>
           </div>
         </div>
@@ -120,6 +125,8 @@ export default {
         reqParams.hasPicture = null;
         reqParams.tag = tag.title;
       }
+
+      reqParams.page = 1;
     };
 
     const reqParams = reactive({
@@ -130,12 +137,16 @@ export default {
       sortField: null,
     });
 
+    const changeSort = (data) => {
+      reqParams.sortField = data;
+      reqParams.page = 1;
+    };
+
     const commentList = ref([]);
 
     watch(
       reqParams,
       () => {
-        reqParams.page = 1;
         findGoodsCommentList(goods.value.id, reqParams).then((data) => {
           commentList.value = data.result.items;
         });
@@ -143,12 +154,24 @@ export default {
       { immediate: true }
     );
 
+    const formatSpecs = (specs) => {
+      return specs
+        .reduce((p, c) => `${p} ${c.name}：${c.nameValue}`, "")
+        .trim();
+    };
+
+    const formatNickname = (nickname) => {
+      return nickname.substr(0, 1) + "****" + nickname.substr(-1);
+    };
     return {
       commentInfo,
       currentTagIndex,
       changeTag,
       reqParams,
-      commentList
+      commentList,
+      changeSort,
+      formatSpecs,
+      formatNickname,
     };
   },
 };
