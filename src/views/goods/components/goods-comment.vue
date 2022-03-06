@@ -26,7 +26,7 @@
           </div>
         </div>
       </div>
-      <div class="sort">
+      <div class="sort" v-if="commentInfo">
         <span>排序：</span>
         <a
           @click="changeSort(null)"
@@ -88,7 +88,13 @@
         </div>
       </div>
     </div>
-    <xtx-pagination></xtx-pagination>
+    <xtx-pagination
+      v-if="total"
+      :total="total"
+      :page-size="reqParams.pageSize"
+      :current-page="reqParams.page"
+      @current-change="changePagerFn"
+    ></xtx-pagination>
   </div>
 </template>
 
@@ -151,11 +157,14 @@ export default {
 
     const commentList = ref([]);
 
+    const total = ref(0);
+
     watch(
       reqParams,
       () => {
         findGoodsCommentList(goods.value.id, reqParams).then((data) => {
           commentList.value = data.result.items;
+          total.value = data.result.counts;
         });
       },
       { immediate: true }
@@ -170,6 +179,10 @@ export default {
     const formatNickname = (nickname) => {
       return nickname.substr(0, 1) + "****" + nickname.substr(-1);
     };
+
+    const changePagerFn = (data) => {
+      reqParams.page = data;
+    };
     return {
       commentInfo,
       currentTagIndex,
@@ -179,6 +192,8 @@ export default {
       changeSort,
       formatSpecs,
       formatNickname,
+      total,
+      changePagerFn,
     };
   },
 };

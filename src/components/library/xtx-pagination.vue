@@ -2,7 +2,7 @@
   <div class="xtx-pagination">
     <a
       v-if="myCurrentPage > 1"
-      @click="myCurrentPage = myCurrentPage - 1"
+      @click="changePage(myCurrentPage - 1)"
       href="javascript:;"
       >上一页</a
     >
@@ -10,7 +10,7 @@
     <span v-if="pager.start > 1">...</span>
     <a
       href="javascript:;"
-      @click="myCurrentPage = i"
+      @click="changePage(i)"
       :class="{ active: i == myCurrentPage }"
       v-for="i in pager.btnArr"
       :key="i"
@@ -19,7 +19,7 @@
     <span v-if="pager.end < pager.pageCount">...</span>
     <a
       v-if="myCurrentPage < pager.pageCount"
-      @click="myCurrentPage = myCurrentPage + 1"
+      @click="changePage(myCurrentPage + 1)"
       href="javascript:;"
       >下一页</a
     >
@@ -27,25 +27,39 @@
   </div>
 </template>
 <script>
-import { computed, ref } from "vue-demi";
+import { computed, ref, watch } from "vue-demi";
 export default {
   name: "xtxPagination",
+  props: {
+    total: {
+      type: Number,
+      default: 100,
+    },
+    pageSize: {
+      type: Number,
+      default: 10,
+    },
+    currentPage: {
+      type: Number,
+      default: 1,
+    },
+  },
 
-  setup() {
+  setup(props, { emit }) {
     const count = 5;
 
-    const myCurrentPage = ref(7);
+    const myCurrentPage = ref(1);
 
     const myTotal = ref(100);
 
     const myPageSize = ref(10);
 
     const pager = computed(() => {
-      const pageCount = Math.ceil(myTotal.value / myPageSize.value);
+      var pageCount = Math.ceil(myTotal.value / myPageSize.value);
       const offset = Math.floor(count / 2);
 
-      let start = myCurrentPage.value - offset;
-      let end = start + count - 1;
+      var start = myCurrentPage.value - offset;
+      var end = start + count - 1;
 
       if (start < 1) {
         start = 1;
@@ -62,12 +76,30 @@ export default {
       for (let i = start; i <= end; i++) {
         btnArr.push(i);
       }
+
       return { pageCount, btnArr, start, end };
     });
 
+    const changePage = (page) => {
+      myCurrentPage.value = page;
+      emit("current-change", page);
+    };
+
+    watch(
+      props,
+      () => {
+        myTotal.value = props.total;
+        myPageSize.value = props.pageSize;
+        myCurrentPage.value = props.currentPage;
+      },
+      {
+        immediate: true,
+      }
+    );
     return {
       myCurrentPage,
       pager,
+      changePage,
     };
   },
 };
