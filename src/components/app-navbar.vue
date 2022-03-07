@@ -9,7 +9,7 @@
           <li><a href="javascript:;">退出登录</a></li>
         </template>
         <template v-else>
-          <li><a href="javascript:;">请先登录</a></li>
+          <li><router-link to="/login" tag="a" href="javascript:;">请先登录</router-link></li>
           <li><a href="javascript:;">免费注册</a></li>
         </template>
 

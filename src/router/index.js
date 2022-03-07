@@ -4,6 +4,7 @@ import Home from '@/views/home/index.vue'
 import TopCategory from '@/views/category/index.vue'
 import SubCategory from '@/views/category/sub.vue'
 import Goods from '@/views/goods/index.vue'
+import Login from '@/views/login/index.vue'
 
 const routes = [{
     path: '/',
@@ -21,6 +22,9 @@ const routes = [{
         path: '/product/:id',
         component: Goods
     }]
+}, {
+    path: '/login',
+    component: Login
 }]
 
 const router = createRouter({
