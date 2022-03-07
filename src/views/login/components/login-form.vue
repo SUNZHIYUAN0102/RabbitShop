@@ -8,19 +8,37 @@
         <i class="iconfont icon-msg"></i> 使用短信登录
       </a>
     </div>
-    <div class="form">
+    <Form
+      class="form"
+      :validation-schema="schema"
+      autocomplete="off"
+      v-slot="{ errors }"
+    >
       <template v-if="!isMsgLogin">
         <div class="form-item">
           <div class="input">
             <i class="iconfont icon-user"></i>
-            <input type="text" placeholder="请输入用户名" />
+            <Field
+              :class="{ error: errors.account }"
+              v-model="form.account"
+              name="account"
+              type="text"
+              placeholder="请输入用户名"
+            />
           </div>
-          <!-- <div class="error"><i class="iconfont icon-warning" />请输入手机号</div> -->
+          <div v-if="errors.account" class="error">
+            <i class="iconfont icon-warning" />{{ errors.account }}
+          </div>
         </div>
         <div class="form-item">
           <div class="input">
             <i class="iconfont icon-lock"></i>
-            <input type="password" placeholder="请输入密码" />
+            <Field
+              v-model="form.password"
+              name="password"
+              type="password"
+              placeholder="请输入密码"
+            />
           </div>
         </div>
       </template>
@@ -28,13 +46,23 @@
         <div class="form-item">
           <div class="input">
             <i class="iconfont icon-user"></i>
-            <input type="text" placeholder="请输入手机号" />
+            <Field
+              v-model="form.mobile"
+              name="mobile"
+              type="text"
+              placeholder="请输入手机号"
+            />
           </div>
         </div>
         <div class="form-item">
           <div class="input">
             <i class="iconfont icon-code"></i>
-            <input type="password" placeholder="请输入验证码" />
+            <Field
+              v-model="form.code"
+              name="code"
+              type="password"
+              placeholder="请输入验证码"
+            />
             <span class="code">发送验证码</span>
           </div>
         </div>
@@ -49,7 +77,7 @@
         </div>
       </div>
       <a href="javascript:;" class="btn">登录</a>
-    </div>
+    </Form>
     <div class="action">
       <img
         src="https://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_7.png"
@@ -65,18 +93,35 @@
 
 <script>
 import { reactive, ref } from "vue-demi";
+import { Form, Field } from "vee-validate";
 export default {
   setup() {
     const isMsgLogin = ref(false);
 
     const form = reactive({
       isAgree: true,
+      account: null,
+      password: null,
+      mobile: null,
+      code: null,
     });
+
+    const schema = {
+      account(value) {
+        if (!value) return "请输入用户名";
+        return true;
+      },
+    };
 
     return {
       isMsgLogin,
       form,
+      schema,
     };
+  },
+  components: {
+    Form,
+    Field,
   },
 };
 </script>
