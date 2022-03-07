@@ -16,7 +16,12 @@
           >扫码登录</a
         >
       </nav>
-      <div v-if="activeName === 'account'" class="account-box">表单</div>
+
+      <login-form
+        v-if="activeName === 'account'"
+        class="account-box"
+      ></login-form>
+
       <div v-if="activeName === 'qrcode'" class="qrcode-box">
         <img src="@/assets/images/qrcode.jpg" alt="" />
         <p>打开 <a href="javascript:;">小兔鲜App</a> 扫码登录</p>
@@ -29,6 +34,7 @@
 <script>
 import loginHeader from "./components/login-header.vue";
 import loginFooter from "./components/login-footer.vue";
+import loginForm from "./components/login-form.vue";
 import { ref } from "vue-demi";
 export default {
   setup() {
@@ -41,6 +47,7 @@ export default {
   components: {
     loginHeader,
     loginFooter,
+    loginForm,
   },
 };
 </script>
