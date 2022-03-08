@@ -9,6 +9,7 @@
       </a>
     </div>
     <Form
+      ref="formCom"
       class="form"
       :validation-schema="schema"
       autocomplete="off"
@@ -34,11 +35,15 @@
           <div class="input">
             <i class="iconfont icon-lock"></i>
             <Field
+              :class="{ error: errors.password }"
               v-model="form.password"
               name="password"
               type="password"
               placeholder="请输入密码"
             />
+          </div>
+          <div v-if="errors.password" class="error">
+            <i class="iconfont icon-warning" />{{ errors.password }}
           </div>
         </div>
       </template>
@@ -47,36 +52,47 @@
           <div class="input">
             <i class="iconfont icon-user"></i>
             <Field
+              :class="{ error: errors.mobile }"
               v-model="form.mobile"
               name="mobile"
               type="text"
               placeholder="请输入手机号"
             />
           </div>
+          <div v-if="errors.mobile" class="error">
+            <i class="iconfont icon-warning" />{{ errors.mobile }}
+          </div>
         </div>
         <div class="form-item">
           <div class="input">
             <i class="iconfont icon-code"></i>
             <Field
+              :class="{ error: errors.code }"
               v-model="form.code"
               name="code"
-              type="password"
+              type="text"
               placeholder="请输入验证码"
             />
             <span class="code">发送验证码</span>
+          </div>
+          <div v-if="errors.code" class="error">
+            <i class="iconfont icon-warning" />{{ errors.code }}
           </div>
         </div>
       </template>
       <div class="form-item">
         <div class="agree">
-          <xtx-checkbox v-model="form.isAgree"></xtx-checkbox>
+          <Field name="isAgree" as="xtxCheckbox" v-model="form.isAgree" />
           <span>我已同意</span>
           <a href="javascript:;">《隐私条款》</a>
           <span>和</span>
           <a href="javascript:;">《服务条款》</a>
         </div>
+        <div v-if="errors.isAgree" class="error">
+          <i class="iconfont icon-warning" />{{ errors.isAgree }}
+        </div>
       </div>
-      <a href="javascript:;" class="btn">登录</a>
+      <a @click="login" href="javascript:;" class="btn">登录</a>
     </Form>
     <div class="action">
       <img
@@ -92,11 +108,13 @@
 </template>
 
 <script>
-import { reactive, ref } from "vue-demi";
+import { reactive, ref, watch } from "vue-demi";
 import { Form, Field } from "vee-validate";
+import schema from "@/utils/vee-validate-schema";
 export default {
   setup() {
     const isMsgLogin = ref(false);
+    const formCom = ref(null)
 
     const form = reactive({
       isAgree: true,
@@ -106,17 +124,34 @@ export default {
       code: null,
     });
 
-    const schema = {
-      account(value) {
-        if (!value) return "请输入用户名";
-        return true;
-      },
+    const mySchema = {
+      account: schema.account,
+      password: schema.password,
+      mobile: schema.mobile,
+      code: schema.code,
+      isAgree: schema.isAgree,
+    };
+
+    watch(isMsgLogin, () => {
+      form.isAgree = true;
+      form.account = null;
+      form.password = null;
+      form.mobile = null;
+      form.code = null;
+    });
+
+    const login = () => {
+      formCom.value.validate().then(valid=>{
+        console.log(valid);
+      })
     };
 
     return {
       isMsgLogin,
       form,
-      schema,
+      schema: mySchema,
+      formCom,
+      login,
     };
   },
   components: {
