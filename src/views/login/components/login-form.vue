@@ -73,7 +73,9 @@
               type="text"
               placeholder="请输入验证码"
             />
-            <span class="code">发送验证码</span>
+            <span @click="send()" class="code">
+              {{ time === 0 ? "发送验证码" : `${time}秒后发送` }}
+            </span>
           </div>
           <div v-if="errors.code" class="error">
             <i class="iconfont icon-warning" />{{ errors.code }}
@@ -108,13 +110,24 @@
 </template>
 
 <script>
-import { getCurrentInstance, reactive, ref, watch } from "vue-demi";
+import {
+  getCurrentInstance,
+  onUnmounted,
+  reactive,
+  ref,
+  watch,
+} from "vue-demi";
 import { Form, Field } from "vee-validate";
 import schema from "@/utils/vee-validate-schema";
 import Message from "@/components/library/Message.js";
-import { userAccountLogin } from "@/api/user";
+import {
+  userAccountLogin,
+  userMobileLoginMsg,
+  userMobileLogin,
+} from "@/api/user";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
+import { useIntervalFn } from "@vueuse/shared";
 export default {
   setup() {
     const isMsgLogin = ref(false);
@@ -153,32 +166,87 @@ export default {
     const login = () => {
       formCom.value.validate().then((valid) => {
         if (valid) {
-          userAccountLogin(form.account, form.password)
-            .then((data) => {
-              const { id, account, avatar, mobile, nickname, token } =
-                data.result;
-              store.commit("user/setUser", {
-                id,
-                account,
-                avatar,
-                mobile,
-                nickname,
-                token,
-              });
-
-              router.push(route.query.redirectUrl || "/");
-              Message({ type: "success", text: "登录成功" });
-            })
-            .catch((e) => {
-              if (e.response.data) {
-                Message({
-                  type: "error",
-                  text: e.response.data.message || "登录失败",
+          if (isMsgLogin) {
+            userMobileLogin(form.mobile, form.code)
+              .then((data) => {
+                const { id, account, avatar, mobile, nickname, token } =
+                  data.result;
+                store.commit("user/setUser", {
+                  id,
+                  account,
+                  avatar,
+                  mobile,
+                  nickname,
+                  token,
                 });
-              }
-            });
+
+                router.push(route.query.redirectUrl || "/");
+                Message({ type: "success", text: "登录成功" });
+              })
+              .catch((e) => {
+                if (e.response.data) {
+                  Message({
+                    type: "error",
+                    text: e.response.data.message || "登录失败",
+                  });
+                }
+              });
+          } else {
+            userAccountLogin(form.account, form.password)
+              .then((data) => {
+                const { id, account, avatar, mobile, nickname, token } =
+                  data.result;
+                store.commit("user/setUser", {
+                  id,
+                  account,
+                  avatar,
+                  mobile,
+                  nickname,
+                  token,
+                });
+
+                router.push(route.query.redirectUrl || "/");
+                Message({ type: "success", text: "登录成功" });
+              })
+              .catch((e) => {
+                if (e.response.data) {
+                  Message({
+                    type: "error",
+                    text: e.response.data.message || "登录失败",
+                  });
+                }
+              });
+          }
         }
       });
+    };
+
+    const time = ref(0);
+    const { pause, resume } = useIntervalFn(
+      () => {
+        time.value--;
+        if (time.value <= 0) {
+          pause();
+        }
+      },
+      1000,
+      false
+    );
+    onUnmounted(() => {
+      pause();
+    });
+    const send = async () => {
+      const valid = mySchema.mobile(form.mobile);
+      if (valid === true) {
+        if (time.value === 0) {
+          await userMobileLoginMsg(form.mobile);
+          Message({ type: "success", text: "发送成功" });
+          time.value = 60;
+          resume();
+        }
+      } else {
+        formCom.value.setFieldError("mobile", valid);
+      }
     };
 
     return {
@@ -187,6 +255,8 @@ export default {
       schema: mySchema,
       formCom,
       login,
+      send,
+      time,
     };
   },
   components: {

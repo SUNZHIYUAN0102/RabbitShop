@@ -2,10 +2,10 @@ import axios from 'axios'
 import store from '@/store'
 import router from '@/router'
 
-export const baseURL = 'http://pcapi-xiaotuxian-front-devtest.itheima.net/'
+export const baseURL = 'https://apipc-xiaotuxian-front.itheima.net/'
 const instance = axios.create({
     baseURL,
-    timeout: 5000
+    timeout: 5000,
 })
 
 instance.interceptors.request.use(function(config) {
