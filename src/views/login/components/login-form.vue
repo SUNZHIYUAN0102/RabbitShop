@@ -112,6 +112,9 @@ import { getCurrentInstance, reactive, ref, watch } from "vue-demi";
 import { Form, Field } from "vee-validate";
 import schema from "@/utils/vee-validate-schema";
 import Message from "@/components/library/Message.js";
+import { userAccountLogin } from "@/api/user";
+import { useStore } from "vuex";
+import { useRoute, useRouter } from "vue-router";
 export default {
   setup() {
     const isMsgLogin = ref(false);
@@ -143,11 +146,38 @@ export default {
 
     // const { proxy } = getCurrentInstance();
 
+    const store = useStore();
+    const router = useRouter();
+    const route = useRoute();
+
     const login = () => {
       formCom.value.validate().then((valid) => {
-        console.log(valid);
-        Message({ type: "error", text: "错误" });
-        // proxy.$message({text: 'hmmm'})
+        if (valid) {
+          userAccountLogin(form.account, form.password)
+            .then((data) => {
+              const { id, account, avatar, mobile, nickname, token } =
+                data.result;
+              store.commit("user/setUser", {
+                id,
+                account,
+                avatar,
+                mobile,
+                nickname,
+                token,
+              });
+
+              router.push(route.query.redirectUrl || "/");
+              Message({ type: "success", text: "登录成功" });
+            })
+            .catch((e) => {
+              if (e.response.data) {
+                Message({
+                  type: "error",
+                  text: e.response.data.message || "登录失败",
+                });
+              }
+            });
+        }
       });
     };
 
