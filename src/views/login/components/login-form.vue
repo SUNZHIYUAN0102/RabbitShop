@@ -108,13 +108,14 @@
 </template>
 
 <script>
-import { reactive, ref, watch } from "vue-demi";
+import { getCurrentInstance, reactive, ref, watch } from "vue-demi";
 import { Form, Field } from "vee-validate";
 import schema from "@/utils/vee-validate-schema";
+import Message from "@/components/library/Message.js";
 export default {
   setup() {
     const isMsgLogin = ref(false);
-    const formCom = ref(null)
+    const formCom = ref(null);
 
     const form = reactive({
       isAgree: true,
@@ -140,10 +141,14 @@ export default {
       form.code = null;
     });
 
+    // const { proxy } = getCurrentInstance();
+
     const login = () => {
-      formCom.value.validate().then(valid=>{
+      formCom.value.validate().then((valid) => {
         console.log(valid);
-      })
+        Message({ type: "error", text: "错误" });
+        // proxy.$message({text: 'hmmm'})
+      });
     };
 
     return {

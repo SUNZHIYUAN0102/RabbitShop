@@ -1,4 +1,5 @@
 import defaultImg from '@/assets/images/200.png'
+import Message from './Message.js'
 
 const importFn = require.context('./', false, /\.vue$/)
 
@@ -11,6 +12,8 @@ export default {
         })
 
         defineDirective(app)
+
+        app.config.globalProperties.$message = Message
     }
 }
 
