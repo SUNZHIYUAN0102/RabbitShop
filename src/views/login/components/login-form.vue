@@ -97,10 +97,14 @@
       <a @click="login" href="javascript:;" class="btn">登录</a>
     </Form>
     <div class="action">
-      <img
-        src="https://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_7.png"
-        alt=""
-      />
+      <a
+        href="https://graph.qq.com/oauth2.0/authorize?client_id=100556005&response_type=token&scope=all&redirect_uri=http%3A%2F%2Fwww.corho.com%3A8080%2F%23%2Flogin%2Fcallback"
+      >
+        <img
+          src="https://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_7.png"
+          alt=""
+        />
+      </a>
       <div class="url">
         <a href="javascript:;">忘记密码</a>
         <a href="javascript:;">免费注册</a>
@@ -112,6 +116,7 @@
 <script>
 import {
   getCurrentInstance,
+  onMounted,
   onUnmounted,
   reactive,
   ref,
@@ -128,6 +133,7 @@ import {
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { useIntervalFn } from "@vueuse/shared";
+import QC from "qc";
 export default {
   setup() {
     const isMsgLogin = ref(false);
@@ -248,6 +254,10 @@ export default {
         formCom.value.setFieldError("mobile", valid);
       }
     };
+
+    // onMounted(() => {
+    //   QC.Login({ btnId: "qqLoginBtn" });
+    // });
 
     return {
       isMsgLogin,

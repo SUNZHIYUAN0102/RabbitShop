@@ -22,4 +22,10 @@ module.exports = {
             config.devServer.disableHostCheck(true)
     },
 
+    configureWebpack: {
+        externals: {
+            qc: 'QC'
+        }
+    },
+
 }
