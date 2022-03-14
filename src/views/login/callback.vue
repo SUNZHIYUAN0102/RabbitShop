@@ -25,10 +25,10 @@
       </a>
     </nav>
     <div class="tab-content" v-if="hasAccount">
-      <callback-bind></callback-bind>
+      <callback-bind :unionId="unionId"></callback-bind>
     </div>
     <div class="tab-content" v-else>
-      <callback-patch></callback-patch>
+      <callback-patch :unionId="unionId"></callback-patch>
     </div>
   </section>
   <login-footer></login-footer>
@@ -57,9 +57,11 @@ export default {
     const isBind = ref(true);
     const store = useStore();
     const router = useRouter();
+    const unionId = ref(null);
 
     if (QC.Login.check()) {
       QC.Login.getMe((openId) => {
+        unionId.value = openId;
         userQQLogin(openId)
           .then((data) => {
             const { id, account, avatar, mobile, nickname, token } =
@@ -74,7 +76,7 @@ export default {
             });
 
             router.push(store.state.user.redirectUrl);
-            Message({type:'success',text:'QQ登录成功'})
+            Message({ type: "success", text: "QQ登录成功" });
           })
           .catch((e) => {
             isBind.value = false;
@@ -85,6 +87,7 @@ export default {
     return {
       hasAccount,
       isBind,
+      unionId,
     };
   },
 };
