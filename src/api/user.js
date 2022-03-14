@@ -11,3 +11,7 @@ export const userMobileLoginMsg = (mobile) => {
 export const userMobileLogin = (mobile, code) => {
     return request('/login/code', 'post', { mobile, code })
 }
+
+export const userQQLogin = (unionId) => {
+    return request('login/social', 'post', { unionId, source: 1 })
+}

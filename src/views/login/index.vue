@@ -36,9 +36,15 @@ import loginHeader from "./components/login-header.vue";
 import loginFooter from "./components/login-footer.vue";
 import loginForm from "./components/login-form.vue";
 import { ref } from "vue-demi";
+import { useStore } from "vuex";
+import { useRoute } from "vue-router";
 export default {
   setup() {
     const activeName = ref("account");
+
+    const store = useStore();
+    const route = useRoute();
+    store.commit("user/setRedirectUrl", route.query.redirectUrl || "/");
 
     return {
       activeName,

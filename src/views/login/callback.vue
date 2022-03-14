@@ -1,6 +1,11 @@
 <template>
   <login-header>联合登录</login-header>
-  <section class="container">
+  <section class="container" v-if="isBind">
+    <div class="unbind">
+      <div class="loading"></div>
+    </div>
+  </section>
+  <section class="container" v-else>
     <nav class="tab">
       <a
         @click="hasAccount = true"
@@ -32,22 +37,55 @@
 <script>
 import loginHeader from "./components/login-header.vue";
 import loginFooter from "./components/login-footer.vue";
-import callbackBind from './components/callback-bind.vue'
-import callbackPatch from './components/callback-patch.vue'
-import { ref } from 'vue-demi';
+import callbackBind from "./components/callback-bind.vue";
+import callbackPatch from "./components/callback-patch.vue";
+import { ref } from "vue-demi";
+import QC from "qc";
+import { userQQLogin } from "@/api/user";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 export default {
   name: "loginCallBack",
   components: {
     loginHeader,
     loginFooter,
     callbackBind,
-    callbackPatch
+    callbackPatch,
   },
   setup() {
-      const hasAccount = ref(false)
-      return{
-          hasAccount
-      }
+    const hasAccount = ref(false);
+    const isBind = ref(true);
+    const store = useStore();
+    const router = useRouter();
+
+    if (QC.Login.check()) {
+      QC.Login.getMe((openId) => {
+        userQQLogin(openId)
+          .then((data) => {
+            const { id, account, avatar, mobile, nickname, token } =
+              data.result;
+            store.commit("user/setUser", {
+              id,
+              account,
+              avatar,
+              mobile,
+              nickname,
+              token,
+            });
+
+            router.push(store.state.user.redirectUrl);
+            Message({type:'success',text:'QQ登录成功'})
+          })
+          .catch((e) => {
+            isBind.value = false;
+          });
+      });
+    }
+
+    return {
+      hasAccount,
+      isBind,
+    };
   },
 };
 </script>
@@ -55,7 +93,24 @@ export default {
 <style scoped lang='less'>
 .container {
   padding: 25px 0;
+  position: relative;
+  height: 730px;
+  .unbind {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    padding: 25px 0;
+    z-index: 99;
+    .loading {
+      height: 100%;
+      background: #fff url(../../assets/images/load.gif) no-repeat center /
+        100px 100px;
+    }
+  }
 }
+
 .tab {
   background: #fff;
   height: 80px;
