@@ -19,3 +19,7 @@ export const userQQLogin = (unionId) => {
 export const userQQBindCode = (mobile) => {
     return request('/login/social/code', 'get', { mobile })
 }
+
+export const userQQBindLogin = (unionId, mobile, code) => {
+    return request('/login/social/bind', 'post', { unionId, mobile, code })
+}

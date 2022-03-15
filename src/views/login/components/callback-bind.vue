@@ -41,7 +41,7 @@
       </div>
       <div v-if="errors.code" class="error">{{ errors.code }}</div>
     </div>
-    <a href="javascript:;" class="submit">立即绑定</a>
+    <a @click="submit()" href="javascript:;" class="submit">立即绑定</a>
   </Form>
 </template>
 
@@ -50,9 +50,11 @@ import QC from "qc";
 import { onUnmounted, reactive, ref } from "vue-demi";
 import { Form, Field } from "vee-validate";
 import schema from "@/utils/vee-validate-schema";
-import { userQQBindCode } from "@/api/user";
+import { userQQBindCode, userQQBindLogin } from "@/api/user";
 import { useIntervalFn } from "@vueuse/shared";
 import Message from "@/components/library/Message";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 export default {
   props: {
     unionId: {
@@ -64,9 +66,11 @@ export default {
     Form,
     Field,
   },
-  setup() {
+  setup(props) {
     const nickname = ref(null);
     const avatar = ref(null);
+    const store = useStore();
+    const router = useRouter();
     QC.api("get_user_info").success((res) => {
       nickname.value = res.data.nickname;
       avatar.value = res.data.figureurl_1;
@@ -112,6 +116,37 @@ export default {
       }
     };
 
+    const submit = () => {
+      const valid = formCom.value.validate();
+      if (valid) {
+        userQQBindLogin(props.unionId, form.mobile, form.code)
+          .then((data) => {
+            const { id, account, avatar, mobile, nickname, token } =
+              data.result;
+            store.commit("user/setUser", {
+              id,
+              account,
+              avatar,
+              mobile,
+              nickname,
+              token,
+            });
+
+            router.push(store.state.user.redirectUrl);
+            Message({ type: "success", text: "QQ登录成功" });
+          })
+          .catch((e) => {
+            Message({ type: "error", text: "绑定失败" });
+          });
+      } else {
+        if (e.response.data) {
+          Message({
+            type: "error",
+            text: e.response.data.message || "登录失败",
+          });
+        }
+      }
+    };
     return {
       nickname,
       avatar,
@@ -120,6 +155,7 @@ export default {
       send,
       formCom,
       time,
+      submit,
     };
   },
 };
