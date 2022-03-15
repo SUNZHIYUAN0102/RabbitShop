@@ -23,3 +23,15 @@ export const userQQBindCode = (mobile) => {
 export const userQQBindLogin = (unionId, mobile, code) => {
     return request('/login/social/bind', 'post', { unionId, mobile, code })
 }
+
+export const userAccountCheck = (account) => {
+    return request('/register/check', 'get', { account })
+}
+
+export const userQQPatchCode = (mobile) => {
+    return request('/register/code', 'get', { mobile })
+}
+
+export const userQQPatchLogin = (unionId, account, mobile, code, password) => {
+    return request(`/login/social/${unionId}/complement`, 'post', { unionId, account, mobile, code, password })
+}
