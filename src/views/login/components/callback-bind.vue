@@ -1,40 +1,62 @@
 <template>
-  <div class="xtx-form">
+  <Form
+    :validation-schema="mySchema"
+    autocomplete="off"
+    v-slot="{ errors }"
+    class="xtx-form"
+  >
     <div class="user-info">
-      <img
-        :src="avatar"
-        alt=""
-      />
-      <p>Hi，{{nickname}} 欢迎来小兔鲜，完成绑定后可以QQ账号一键登录哦~</p>
+      <img :src="avatar" alt="" />
+      <p>Hi，{{ nickname }} 欢迎来小兔鲜，完成绑定后可以QQ账号一键登录哦~</p>
     </div>
     <div class="xtx-form-item">
       <div class="field">
         <i class="icon iconfont icon-phone"></i>
-        <input class="input" type="text" placeholder="绑定的手机号" />
+        <Field
+          v-model="form.mobile"
+          name="mobile"
+          class="input"
+          type="text"
+          placeholder="绑定的手机号"
+          :class="{ err: errors.mobile }"
+        />
       </div>
-      <div class="error"></div>
+      <div v-if="errors.mobile" class="error">{{ errors.mobile }}</div>
     </div>
     <div class="xtx-form-item">
       <div class="field">
         <i class="icon iconfont icon-code"></i>
-        <input class="input" type="text" placeholder="短信验证码" />
+        <Field
+          v-model="form.code"
+          name="code"
+          class="input"
+          type="text"
+          placeholder="短信验证码"
+          :class="{ err: errors.code }"
+        />
         <span class="code">发送验证码</span>
       </div>
-      <div class="error"></div>
+      <div v-if="errors.code" class="error">{{ errors.code }}</div>
     </div>
     <a href="javascript:;" class="submit">立即绑定</a>
-  </div>
+  </Form>
 </template>
 
 <script>
 import QC from "qc";
-import { ref } from "vue-demi";
+import { reactive, ref } from "vue-demi";
+import { Form, Field } from "vee-validate";
+import schema from "@/utils/vee-validate-schema";
 export default {
   props: {
     unionId: {
       type: String,
       default: "",
     },
+  },
+  components: {
+    Form,
+    Field,
   },
   setup() {
     const nickname = ref(null);
@@ -44,10 +66,22 @@ export default {
       avatar.value = res.data.figureurl_1;
     });
 
-    return{
+    const form = reactive({
+      mobile: null,
+      code: null,
+    });
+
+    const mySchema = {
+      mobile: schema.mobile,
+      code: schema.code,
+    };
+
+    return {
       nickname,
-      avatar
-    }
+      avatar,
+      mySchema,
+      form
+    };
   },
 };
 </script>
