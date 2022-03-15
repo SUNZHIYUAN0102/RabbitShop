@@ -4,6 +4,7 @@
     autocomplete="off"
     v-slot="{ errors }"
     class="xtx-form"
+    ref="formCom"
   >
     <div class="user-info">
       <img :src="avatar" alt="" />
@@ -34,7 +35,9 @@
           placeholder="短信验证码"
           :class="{ err: errors.code }"
         />
-        <span class="code">发送验证码</span>
+        <span @click="send()" class="code">
+          {{ time === 0 ? "发送验证码" : `${time}秒后发送` }}
+        </span>
       </div>
       <div v-if="errors.code" class="error">{{ errors.code }}</div>
     </div>
@@ -44,9 +47,12 @@
 
 <script>
 import QC from "qc";
-import { reactive, ref } from "vue-demi";
+import { onUnmounted, reactive, ref } from "vue-demi";
 import { Form, Field } from "vee-validate";
 import schema from "@/utils/vee-validate-schema";
+import { userQQBindCode } from "@/api/user";
+import { useIntervalFn } from "@vueuse/shared";
+import Message from "@/components/library/Message";
 export default {
   props: {
     unionId: {
@@ -76,11 +82,44 @@ export default {
       code: schema.code,
     };
 
+    const formCom = ref(null);
+
+    const time = ref(0);
+    const { pause, resume } = useIntervalFn(
+      () => {
+        time.value--;
+        if (time.value <= 0) {
+          pause();
+        }
+      },
+      1000,
+      false
+    );
+    onUnmounted(() => {
+      pause();
+    });
+    const send = async () => {
+      const valid = schema.mobile(form.mobile);
+      if (valid === true) {
+        if (time.value === 0) {
+          await userQQBindCode(form.mobile);
+          Message({ type: "success", text: "发送成功" });
+          time.value = 60;
+          resume();
+        }
+      } else {
+        formCom.value.setFieldError("mobile", valid);
+      }
+    };
+
     return {
       nickname,
       avatar,
       mySchema,
-      form
+      form,
+      send,
+      formCom,
+      time,
     };
   },
 };
