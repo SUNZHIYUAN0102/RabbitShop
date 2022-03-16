@@ -26,7 +26,10 @@
             @change="changeSku"
           ></goods-sku>
           <xtx-numbox v-model="count" :max="goods.inventory"></xtx-numbox>
-          <xtx-button type="primary" style="margin-top: 20px"
+          <xtx-button
+            @click="insertCart()"
+            type="primary"
+            style="margin-top: 20px"
             >加入购物车</xtx-button
           >
         </div>
@@ -58,7 +61,9 @@ import goodsName from "./components/goods-name.vue";
 import goodsSku from "./components/goods-sku.vue";
 import goodsTab from "./components/goods-tab.vue";
 import goodsHot from "./components/goods-hot.vue";
-import goodsWarn from './components/goods-warn.vue'
+import goodsWarn from "./components/goods-warn.vue";
+import Message from "@/components/library/Message.js";
+import { useStore } from "vuex";
 export default {
   components: {
     goodsRelevant,
@@ -68,11 +73,13 @@ export default {
     goodsSku,
     goodsTab,
     goodsHot,
-    goodsWarn
+    goodsWarn,
   },
 
   setup() {
     const goods = useGoods();
+
+    const store = useStore();
 
     const changeSku = (sku) => {
       if (sku.skuId) {
@@ -80,16 +87,52 @@ export default {
         goods.value.oldPrice = sku.oldPrice;
         goods.value.inventory = sku.inventory;
       }
+
+      currentSku.value = sku;
     };
 
-    provide("goods", goods)
+    provide("goods", goods);
 
     const count = ref(1);
-    console.log(count);
+
+    const currentSku = ref(null);
+
+    const insertCart = () => {
+      if (currentSku.value && currentSku.value.skuId) {
+        const {
+          skuId,
+          specsText: attrsText,
+          inventory: stock,
+        } = currentSku.value;
+
+        const { id, name, price, mainPictures } = goods.value;
+        store
+          .dispatch("cart/insertCart", {
+            skuId,
+            attrsText,
+            stock,
+            id,
+            name,
+            price,
+            nowPrice: price,
+            picture: mainPictures[0],
+            selected: true,
+            count: count.value,
+            isEffective: true,
+          })
+          .then(() => {
+            Message({ type: "success", text: "加入购物车成功" });
+          });
+      } else {
+        Message({ text: "规格不完整" });
+      }
+    };
+
     return {
       goods,
       changeSku,
       count,
+      insertCart,
     };
   },
 };

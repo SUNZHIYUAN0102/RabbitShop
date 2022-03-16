@@ -172,7 +172,7 @@ export default {
     const login = () => {
       formCom.value.validate().then((valid) => {
         if (valid) {
-          if (isMsgLogin) {
+          if (isMsgLogin.value) {
             userMobileLogin(form.mobile, form.code)
               .then((data) => {
                 const { id, account, avatar, mobile, nickname, token } =
