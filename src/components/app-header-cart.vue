@@ -1,25 +1,27 @@
 <template>
   <div class="cart">
     <a class="curr" href="javascript:;">
-      <i class="iconfont icon-cart"></i><em>{{$store.getters['cart/validTotal']}}</em>
+      <i class="iconfont icon-cart"></i
+      ><em>{{ $store.getters["cart/validTotal"] }}</em>
     </a>
     <div class="layer">
       <div class="list">
-        <div class="item" v-for="goods in $store.getters['cart/validList']" :key="goods.skuId">
+        <div
+          class="item"
+          v-for="goods in $store.getters['cart/validList']"
+          :key="goods.skuId"
+        >
           <router-link to="">
-            <img
-              :src="goods.picture"
-              alt=""
-            />
+            <img :src="goods.picture" alt="" />
             <div class="center">
               <p class="name ellipsis-2">
-                {{goods.name}}
+                {{ goods.name }}
               </p>
-              <p class="attr ellipsis">{{goods.attrsText}}</p>
+              <p class="attr ellipsis">{{ goods.attrsText }}</p>
             </div>
             <div class="right">
-              <p class="price">&yen;{{goods.nowPrice}}</p>
-              <p class="count">x{{goods.count}}</p>
+              <p class="price">&yen;{{ goods.nowPrice }}</p>
+              <p class="count">x{{ goods.count }}</p>
             </div>
           </router-link>
           <i class="iconfont icon-close-new"></i>
@@ -27,8 +29,8 @@
       </div>
       <div class="foot">
         <div class="total">
-          <p>共 {{$store.getters['cart/validTotal']}} 件商品</p>
-          <p>&yen;{{$store.getters['cart/validAmount']}}</p>
+          <p>共 {{ $store.getters["cart/validTotal"] }} 件商品</p>
+          <p>&yen;{{ $store.getters["cart/validAmount"] }}</p>
         </div>
         <xtx-button type="plain">去购物车结算</xtx-button>
       </div>
@@ -37,8 +39,15 @@
 </template>
 
 <script>
+import { useStore } from "vuex";
+import Message from './library/Message';
 export default {
-  setup() {},
+  setup() {
+    const store = useStore();
+    store.dispatch("cart/findCart").then(()=>{
+      Message({type:'success',text:'更新购物车成功'})
+    })
+  },
 };
 </script>
 

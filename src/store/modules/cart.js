@@ -1,3 +1,6 @@
+import { getNewCartGoods } from "@/api/cart"
+
+
 export default {
     namespaced: true,
     state() {
@@ -27,6 +30,15 @@ export default {
                 state.list.splice(sameIndex, 1);
             }
             state.list.unshift(payload);
+        },
+
+        updateCart(state, goods) {
+            const updateGood = state.list.find(item => item.skuId === goods.skuId)
+            for (const key in goods) {
+                if (goods[key] !== undefined && goods[key] !== null && goods[key] !== '') {
+                    updateGood[key] = goods[key]
+                }
+            }
         }
     },
     actions: {
@@ -40,6 +52,24 @@ export default {
                 }
             })
 
+        },
+
+        findCart(ctx) {
+            return new Promise((resolve, reject) => {
+                if (ctx.rootState.user.profile.token) {
+
+                } else {
+                    const promiseArr = ctx.state.list.map(goods => {
+                        return getNewCartGoods(goods.skuId)
+                    })
+                    Promise.all(promiseArr).then(dataList => {
+                        dataList.forEach((data, i) => {
+                            ctx.commit('updateCart', { skuId: ctx.state.list[i].skuId, ...data.result })
+                        })
+                        resolve()
+                    })
+                }
+            })
         }
     }
 }
