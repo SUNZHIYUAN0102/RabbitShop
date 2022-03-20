@@ -14,7 +14,7 @@
           v-for="goods in $store.getters['cart/validList']"
           :key="goods.skuId"
         >
-          <router-link to="">
+          <router-link :to="`/product/${goods.id}`">
             <img :src="goods.picture" alt="" />
             <div class="center">
               <p class="name ellipsis-2">
@@ -38,7 +38,7 @@
           <p>共 {{ $store.getters["cart/validTotal"] }} 件商品</p>
           <p>&yen;{{ $store.getters["cart/validAmount"] }}</p>
         </div>
-        <xtx-button type="plain">去购物车结算</xtx-button>
+        <xtx-button @click="$router.push('/cart')" type="plain">去购物车结算</xtx-button>
       </div>
     </div>
   </div>
