@@ -1,6 +1,5 @@
 import { getNewCartGoods } from "@/api/cart"
 
-
 export default {
     namespaced: true,
     state() {
@@ -39,6 +38,11 @@ export default {
                     updateGood[key] = goods[key]
                 }
             }
+        },
+
+        deleteCart(state, skuId) {
+            const index = state.list.findIndex(item => item.skuId === skuId)
+            state.list.splice(index, 1)
         }
     },
     actions: {
@@ -51,7 +55,6 @@ export default {
                     resolve()
                 }
             })
-
         },
 
         findCart(ctx) {
@@ -68,6 +71,17 @@ export default {
                         })
                         resolve()
                     })
+                }
+            })
+        },
+
+        deleteCart(ctx, payload) {
+            return new Promise((resolve, reject) => {
+                if (ctx.rootState.user.profile.token) {
+
+                } else {
+                    ctx.commit('deleteCart', payload)
+                    resolve()
                 }
             })
         }
