@@ -18,6 +18,26 @@ export default {
 
         validAmount(state, getters) {
             return getters.validList.reduce((p, c) => p + c.count * c.nowPrice * 100, 0) / 100
+        },
+
+        invalidList(state) {
+            return state.list.filter(goods => goods.stock <= 0 && !goods.isEffective)
+        },
+
+        selectedList(state, getters) {
+            return getters.validList.filter(item => item.selected)
+        },
+
+        selectedTotal(state, getters) {
+            return getters.selectedList.reduce((p, c) => p + c.count, 0)
+        },
+
+        selectedAmount(state, getters) {
+            return getters.selectedList.reduce((p, c) => p + c.count * Math.round(c.nowPrice * 100), 0) / 100
+        },
+
+        isCheckAll(state, getters) {
+            return getters.validList.length !== 0 && getters.selectedList.length === getters.validList.length
         }
     },
     mutations: {
