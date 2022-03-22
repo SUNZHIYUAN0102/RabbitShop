@@ -64,6 +64,8 @@ export default {
             const index = state.list.findIndex(item => item.skuId === skuId)
             state.list.splice(index, 1)
         }
+
+
     },
     actions: {
         insertCart(ctx, payload) {
@@ -104,6 +106,32 @@ export default {
                     resolve()
                 }
             })
+        },
+
+        updateCart(ctx, payload) {
+            return new Promise((resolve, reject) => {
+                if (ctx.rootState.user.profile.token) {
+
+                } else {
+                    ctx.commit('updateCart', payload)
+                    resolve()
+                }
+            })
+        },
+
+        checkAllCart(ctx, selected) {
+            return new Promise((resolve, reject) => {
+                if (ctx.rootState.user.profile.token) {
+
+                } else {
+                    ctx.getters.validList.forEach(goods => {
+                        ctx.commit('updateCart', { skuId: goods.skuId, selected })
+                    })
+                    resolve()
+                }
+            })
         }
+
+
     }
 }
