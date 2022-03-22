@@ -25,7 +25,12 @@
           </thead>
 
           <tbody>
-            <tr
+            <tr v-if="$store.getters['cart/validList'].length == 0">
+              <td colspan="6">
+                <cart-none></cart-none>
+              </td>
+            </tr>
+            <tr v-else
               v-for="goods in $store.getters['cart/validList']"
               :key="goods.skuId"
             >
@@ -66,7 +71,14 @@
               </td>
               <td class="tc">
                 <p><a href="javascript:;">移入收藏夹</a></p>
-                <p><a class="green" href="javascript:;">删除</a></p>
+                <p>
+                  <a
+                    @click="deleteCart(goods.skuId)"
+                    class="green"
+                    href="javascript:;"
+                    >删除</a
+                  >
+                </p>
                 <p><a href="javascript:;">找相似</a></p>
               </td>
             </tr>
@@ -106,7 +118,14 @@
                 </p>
               </td>
               <td class="tc">
-                <p><a class="green" href="javascript:;">删除</a></p>
+                <p>
+                  <a
+                    @click="deleteCart(goods.skuId)"
+                    class="green"
+                    href="javascript:;"
+                    >删除</a
+                  >
+                </p>
                 <p><a href="javascript:;">找相似</a></p>
               </td>
             </tr>
@@ -140,8 +159,10 @@
 <script>
 import goodRelevant from "@/views/goods/components/goods-relevant";
 import { useStore } from "vuex";
+import Message from "@/components/library/Message";
+import cartNone from "./components/cart-none";
 export default {
-  components: { goodRelevant },
+  components: { goodRelevant, cartNone },
   setup() {
     var store = useStore();
     const checkOne = (skuId, selected) => {
@@ -152,9 +173,16 @@ export default {
       store.dispatch("cart/checkAllCart", selected);
     };
 
+    const deleteCart = (skuId) => {
+      store.dispatch("cart/deleteCart", skuId).then(() => {
+        Message({ type: "success", text: "删除成功" });
+      });
+    };
+
     return {
       checkOne,
       checkAll,
+      deleteCart,
     };
   },
 };
