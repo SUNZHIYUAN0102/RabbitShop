@@ -64,8 +64,6 @@ export default {
             const index = state.list.findIndex(item => item.skuId === skuId)
             state.list.splice(index, 1)
         }
-
-
     },
     actions: {
         insertCart(ctx, payload) {
@@ -131,7 +129,5 @@ export default {
                 }
             })
         }
-
-
     }
 }

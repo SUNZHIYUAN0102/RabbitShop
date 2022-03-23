@@ -30,7 +30,8 @@
                 <cart-none></cart-none>
               </td>
             </tr>
-            <tr v-else
+            <tr
+              v-else
               v-for="goods in $store.getters['cart/validList']"
               :key="goods.skuId"
             >
@@ -161,6 +162,7 @@ import goodRelevant from "@/views/goods/components/goods-relevant";
 import { useStore } from "vuex";
 import Message from "@/components/library/Message";
 import cartNone from "./components/cart-none";
+import Confirm from "@/components/library/Confirm";
 export default {
   components: { goodRelevant, cartNone },
   setup() {
@@ -174,9 +176,15 @@ export default {
     };
 
     const deleteCart = (skuId) => {
-      store.dispatch("cart/deleteCart", skuId).then(() => {
-        Message({ type: "success", text: "删除成功" });
-      });
+      Confirm({ text: "亲，您是否确认删除当前商品" })
+        .then(() => {
+          store.dispatch("cart/deleteCart", skuId).then(() => {
+            Message({ type: "success", text: "删除成功" });
+          });
+        })
+        .catch((e) => {
+          console.log("no");
+        });
     };
 
     return {
