@@ -143,7 +143,7 @@
           >
           <a @click="batchDeleteCart()" href="javascript:;">删除商品</a>
           <a href="javascript:;">移入收藏夹</a>
-          <a href="javascript:;">清空失效商品</a>
+          <a @click="batchDeleteCart(true)" href="javascript:;">清空失效商品</a>
         </div>
         <div class="total">
           共 {{ $store.getters["cart/validTotal"] }} 件商品，已选择
@@ -185,10 +185,12 @@ export default {
         .catch((e) => {});
     };
 
-    const batchDeleteCart = () => {
-      Confirm({ text: "亲，您是否确认删除选中商品" })
+    const batchDeleteCart = (isClear) => {
+      Confirm({
+        text: `亲，您是否确认删除${isClear ? "失效商品" : "选中商品"}`,
+      })
         .then(() => {
-          store.dispatch("cart/batchDeleteCart").then(() => {
+          store.dispatch("cart/batchDeleteCart", isClear).then(() => {
             Message({ type: "success", text: "删除成功" });
           });
         })
