@@ -128,6 +128,19 @@ export default {
                     resolve()
                 }
             })
+        },
+
+        batchDeleteCart(ctx) {
+            return new Promise((resolve, reject) => {
+                if (ctx.rootState.user.profile.token) {
+
+                } else {
+                    ctx.getters.selectedList.forEach(item => {
+                        ctx.commit('deleteCart', item.skuId)
+                    })
+                    resolve()
+                }
+            })
         }
     }
 }
