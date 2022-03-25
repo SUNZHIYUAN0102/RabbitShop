@@ -48,6 +48,11 @@
                   /></router-link>
                   <div>
                     <p class="name ellipsis">{{ goods.name }}</p>
+                    <cart-sku
+                      @change="($event) => updateCartSku(goods.skuId, $event)"
+                      :skuId="goods.skuId"
+                      :attrsText="goods.attrsText"
+                    ></cart-sku>
                   </div>
                 </div>
               </td>
@@ -167,8 +172,9 @@ import { useStore } from "vuex";
 import Message from "@/components/library/Message";
 import cartNone from "./components/cart-none";
 import Confirm from "@/components/library/Confirm";
+import cartSku from "./components/cart-sku";
 export default {
-  components: { goodRelevant, cartNone },
+  components: { goodRelevant, cartNone, cartSku },
   setup() {
     var store = useStore();
     const checkOne = (skuId, selected) => {
@@ -205,12 +211,17 @@ export default {
       store.dispatch("cart/updateCart", { skuId, count });
     };
 
+    const updateCartSku = (oldSkuId, newSku) => {
+      store.dispatch("cart/updateCartSku", { oldSkuId, newSku });
+    };
+
     return {
       checkOne,
       checkAll,
       deleteCart,
       batchDeleteCart,
       updateCount,
+      updateCartSku,
     };
   },
 };

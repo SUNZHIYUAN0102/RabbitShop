@@ -141,6 +141,21 @@ export default {
                     resolve()
                 }
             })
+        },
+
+        updateCartSku(ctx, { oldSkuId, newSku }) {
+            return new Promise((resolve, reject) => {
+                if (ctx.rootState.user.profile.token) {
+
+                } else {
+                    const oldGoods = ctx.state.list.find(x => x.skuId === oldSkuId)
+                    ctx.commit('deleteCart', oldSkuId)
+                    const { skuId, price: nowPrice, specsText: attrsText, inventory: stock } = newSku
+                    const newGoods = {...oldGoods, skuId, nowPrice, attrsText, stock }
+                    ctx.commit('insertCart', newGoods)
+                    resolve()
+                }
+            })
         }
     }
 }
