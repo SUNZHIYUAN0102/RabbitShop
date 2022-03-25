@@ -7,3 +7,7 @@ export const getNewCartGoods = (skuId) => {
 export const getGoodsSku = (skuId) => {
     return request(`/goods/sku/${skuId}`, 'get')
 }
+
+export const mergeCart = (cartList) => {
+    return request('member/cart/merge', 'post', cartList)
+}

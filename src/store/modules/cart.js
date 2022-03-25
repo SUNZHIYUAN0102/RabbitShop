@@ -1,4 +1,4 @@
-import { getNewCartGoods } from "@/api/cart"
+import { getNewCartGoods, mergeCart } from "@/api/cart"
 
 export default {
     namespaced: true,
@@ -63,6 +63,10 @@ export default {
         deleteCart(state, skuId) {
             const index = state.list.findIndex(item => item.skuId === skuId)
             state.list.splice(index, 1)
+        },
+
+        setCart(state, payload) {
+            state.list = payload
         }
     },
     actions: {
@@ -156,6 +160,19 @@ export default {
                     resolve()
                 }
             })
+        },
+
+        async mergeCart(ctx) {
+            const cartList = ctx.state.list.map((goods) => {
+                return {
+                    skuId: goods.skuId,
+                    selected: goods.selected,
+                    count: goods.count
+                }
+            })
+
+            await mergeCart(cartList)
+            ctx.commit('setCart', [])
         }
     }
 }

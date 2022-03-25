@@ -186,8 +186,10 @@ export default {
                   token,
                 });
 
-                router.push(route.query.redirectUrl || "/");
-                Message({ type: "success", text: "登录成功" });
+                store.dispatch("cart/mergeCart").then(() => {
+                  router.push(route.query.redirectUrl || "/");
+                  Message({ type: "success", text: "登录成功" });
+                });
               })
               .catch((e) => {
                 if (e.response.data) {
@@ -211,8 +213,10 @@ export default {
                   token,
                 });
 
-                router.push(route.query.redirectUrl || "/");
-                Message({ type: "success", text: "登录成功" });
+                store.dispatch("cart/mergeCart").then(() => {
+                  router.push(route.query.redirectUrl || "/");
+                  Message({ type: "success", text: "登录成功" });
+                });
               })
               .catch((e) => {
                 if (e.response.data) {

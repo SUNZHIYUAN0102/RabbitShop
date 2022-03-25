@@ -74,9 +74,10 @@ export default {
               nickname,
               token,
             });
-
-            router.push(store.state.user.redirectUrl);
-            Message({ type: "success", text: "QQ登录成功" });
+            store.dispatch("cart/mergeCart").then(() => {
+              router.push(store.state.user.redirectUrl);
+              Message({ type: "success", text: "QQ登录成功" });
+            });
           })
           .catch((e) => {
             isBind.value = false;
