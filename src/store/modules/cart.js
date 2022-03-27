@@ -161,7 +161,6 @@ export default {
                         ctx.commit('setCart', data.result)
                         resolve()
                     })
-
                 } else {
                     ctx.getters[isClear ? 'invalidList' : 'selectedList'].forEach(item => {
                         ctx.commit('deleteCart', item.skuId)
@@ -174,7 +173,15 @@ export default {
         updateCartSku(ctx, { oldSkuId, newSku }) {
             return new Promise((resolve, reject) => {
                 if (ctx.rootState.user.profile.token) {
-
+                    const oldGoods = ctx.state.list.find(x => x.skuId === oldSkuId)
+                    deleteCart([oldSkuId]).then(() => {
+                        return insertCart({ skuId: newSku.skuId, count: oldGoods.count })
+                    }).then(() => {
+                        return findCart()
+                    }).then((data) => {
+                        ctx.commit('setCart', data.result)
+                        resolve()
+                    })
                 } else {
                     const oldGoods = ctx.state.list.find(x => x.skuId === oldSkuId)
                     ctx.commit('deleteCart', oldSkuId)
