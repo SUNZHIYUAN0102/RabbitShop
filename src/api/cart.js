@@ -27,3 +27,7 @@ export const deleteCart = (ids) => {
 export const updateCart = ({ skuId, selected, count }) => {
     return request(`/member/cart/${skuId}`, 'put', { selected, count })
 }
+
+export const checkAll = ({ selected, ids }) => {
+    return request('/member/cart/selected', 'put', { selected, ids })
+}

@@ -1,4 +1,4 @@
-import { deleteCart, findCart, getNewCartGoods, insertCart, mergeCart, updateCart } from "@/api/cart"
+import { checkAll, deleteCart, findCart, getNewCartGoods, insertCart, mergeCart, updateCart } from "@/api/cart"
 
 export default {
     namespaced: true,
@@ -141,7 +141,13 @@ export default {
         checkAllCart(ctx, selected) {
             return new Promise((resolve, reject) => {
                 if (ctx.rootState.user.profile.token) {
-
+                    const ids = ctx.getters.validList.map((item) => item.skuId)
+                    checkAll({ selected, ids }).then(() => {
+                        return findCart()
+                    }).then(data => {
+                        ctx.commit('setCart', data.result)
+                        resolve()
+                    })
                 } else {
                     ctx.getters.validList.forEach(goods => {
                         ctx.commit('updateCart', { skuId: goods.skuId, selected })
