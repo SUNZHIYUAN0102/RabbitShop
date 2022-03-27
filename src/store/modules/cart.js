@@ -1,4 +1,4 @@
-import { getNewCartGoods, mergeCart } from "@/api/cart"
+import { findCart, getNewCartGoods, insertCart, mergeCart } from "@/api/cart"
 
 export default {
     namespaced: true,
@@ -73,7 +73,12 @@ export default {
         insertCart(ctx, payload) {
             return new Promise((resolve, reject) => {
                 if (ctx.rootState.user.profile.token) {
-
+                    insertCart({ skuId: payload.skuId, count: payload.count }).then(() => {
+                        return findCart()
+                    }).then(data => {
+                        ctx.commit('setCart', data.result)
+                        resolve()
+                    })
                 } else {
                     ctx.commit('insertCart', payload)
                     resolve()
@@ -84,7 +89,9 @@ export default {
         findCart(ctx) {
             return new Promise((resolve, reject) => {
                 if (ctx.rootState.user.profile.token) {
-
+                    findCart().then(data => {
+                        ctx.commit('setCart', data.result)
+                    })
                 } else {
                     const promiseArr = ctx.state.list.map(goods => {
                         return getNewCartGoods(goods.skuId)
