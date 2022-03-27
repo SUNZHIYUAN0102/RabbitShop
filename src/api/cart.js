@@ -23,3 +23,7 @@ export const insertCart = ({ skuId, count }) => {
 export const deleteCart = (ids) => {
     return request('/member/cart', 'delete', { ids })
 }
+
+export const updateCart = ({ skuId, selected, count }) => {
+    return request(`/member/cart/${skuId}`, 'put', { selected, count })
+}
