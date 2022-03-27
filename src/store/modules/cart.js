@@ -1,4 +1,4 @@
-import { findCart, getNewCartGoods, insertCart, mergeCart } from "@/api/cart"
+import { deleteCart, findCart, getNewCartGoods, insertCart, mergeCart } from "@/api/cart"
 
 export default {
     namespaced: true,
@@ -109,7 +109,12 @@ export default {
         deleteCart(ctx, payload) {
             return new Promise((resolve, reject) => {
                 if (ctx.rootState.user.profile.token) {
-
+                    deleteCart([payload]).then(() => {
+                        return findCart()
+                    }).then(data => {
+                        ctx.commit('setCart', data.result)
+                        resolve()
+                    })
                 } else {
                     ctx.commit('deleteCart', payload)
                     resolve()

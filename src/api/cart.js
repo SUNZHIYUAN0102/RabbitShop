@@ -19,3 +19,7 @@ export const findCart = () => {
 export const insertCart = ({ skuId, count }) => {
     return request('/member/cart', 'post', { skuId, count })
 }
+
+export const deleteCart = (ids) => {
+    return request('/member/cart', 'delete', { ids })
+}
