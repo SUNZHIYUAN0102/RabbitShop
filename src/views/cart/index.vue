@@ -158,10 +158,10 @@
           共 {{ $store.getters["cart/validTotal"] }} 件商品，已选择
           {{ $store.getters["cart/selectedTotal"] }} 件，商品合计：
           <span class="red">¥{{ $store.getters["cart/selectedAmount"] }}</span>
-          <xtx-button type="primary">下单结算</xtx-button>
+          <xtx-button @click="checkOut" type="primary">下单结算</xtx-button>
         </div>
       </div>
-      <!-- 猜你喜欢 -->
+
       <goods-relevant></goods-relevant>
     </div>
   </div>
@@ -173,10 +173,12 @@ import Message from "@/components/library/Message";
 import cartNone from "./components/cart-none";
 import Confirm from "@/components/library/Confirm";
 import cartSku from "./components/cart-sku";
+import { useRouter } from "vue-router";
 export default {
   components: { goodRelevant, cartNone, cartSku },
   setup() {
     var store = useStore();
+    const router = useRouter();
     const checkOne = (skuId, selected) => {
       store.dispatch("cart/updateCart", { skuId, selected });
     };
@@ -215,6 +217,18 @@ export default {
       store.dispatch("cart/updateCartSku", { oldSkuId, newSku });
     };
 
+    const checkOut = () => {
+      if (store.getters["cart/selectedList"].length == 0) {
+        return Message({ text: "请勾选至少一件商品!" });
+      }
+
+      Confirm({ text: "请登录已执行接下来的操作" })
+        .then(() => {
+          router.push("/member/checkout");
+        })
+        .catch((e) => {});
+    };
+
     return {
       checkOne,
       checkAll,
@@ -222,6 +236,7 @@ export default {
       batchDeleteCart,
       updateCount,
       updateCartSku,
+      checkOut,
     };
   },
 };

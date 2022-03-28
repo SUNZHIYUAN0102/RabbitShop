@@ -7,6 +7,7 @@ import Goods from '@/views/goods/index.vue'
 import Login from '@/views/login/index.vue'
 import LoginCallBack from '@/views/login/callback.vue'
 import Cart from '@/views/cart/index.vue'
+import store from '@/store'
 
 const routes = [{
     path: '/',
@@ -41,6 +42,13 @@ const router = createRouter({
     scrollBehavior() {
         return { left: 0, top: 0 }
     }
+})
+
+router.beforeEach((to, from, next) => {
+    const { profile } = store.state.user
+    if (!profile.token && to.path.startsWith('/member')) return next('/login?redirectUrl=' + encodeURIComponent(to.fullPath))
+
+    next()
 })
 
 export default router
