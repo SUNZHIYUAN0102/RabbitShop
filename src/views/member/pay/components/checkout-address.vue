@@ -8,7 +8,10 @@
         <li>
           <span>收<i />货<i />人：</span>{{ showAddress.receiver }}
         </li>
-        <li><span>联系方式：</span>{{ showAddress.contact.replace(/^(\d{3})\d{4}(\d{4})/,'$1****$2') }}</li>
+        <li>
+          <span>联系方式：</span
+          >{{ showAddress.contact.replace(/^(\d{3})\d{4}(\d{4})/, "$1****$2") }}
+        </li>
         <li>
           <span>收货地址：</span>{{ showAddress.fullLocation
           }}{{ showAddress.address }}
@@ -17,10 +20,22 @@
       <a v-if="showAddress" href="javascript:;">修改地址</a>
     </div>
     <div class="action">
-      <xtx-button class="btn">切换地址</xtx-button>
-      <xtx-button class="btn">添加地址</xtx-button>
+      <xtx-button @click="visible = true" class="btn">切换地址</xtx-button>
+      <xtx-button @click="visible = true" class="btn">添加地址</xtx-button>
     </div>
   </div>
+  <xtx-dialog title="切换收货地址" v-model:visible="visible">
+    内容
+    <template v-slot:footer>
+      <xtx-button
+        @click="visible = false"
+        type="gray"
+        style="margin-right: 20px"
+        >取消</xtx-button
+      >
+      <xtx-button @click="visible = false" type="primary">确认</xtx-button>
+    </template>
+  </xtx-dialog>
 </template>
 <script>
 import { ref } from "vue-demi";
@@ -34,6 +49,7 @@ export default {
   setup(props) {
     const showAddress = ref(null);
     const defaultAddress = props.list.find((item) => item.isDefault === 0);
+    const visible = ref(false);
 
     if (defaultAddress) {
       showAddress.value = defaultAddress;
@@ -45,6 +61,7 @@ export default {
 
     return {
       showAddress,
+      visible,
     };
   },
 };
