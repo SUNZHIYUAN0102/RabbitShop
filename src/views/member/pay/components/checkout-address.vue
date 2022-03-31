@@ -53,7 +53,7 @@
       <xtx-button @click="confirmAddress" type="primary">确认</xtx-button>
     </template>
   </xtx-dialog>
-  <address-edit ref="addressEditCom"></address-edit>
+  <address-edit @on-success="successHandle" ref="addressEditCom"></address-edit>
 </template>
 <script>
 import { ref } from "vue-demi";
@@ -101,6 +101,12 @@ export default {
       addressEditCom.value.open();
     };
 
+    const successHandle = (formData) => {
+      const jsonStr = JSON.stringify(formData)
+
+      props.list.unshift(JSON.parse(jsonStr));
+    };
+
     return {
       showAddress,
       visible,
@@ -109,6 +115,7 @@ export default {
       openDialog,
       openAddressEdit,
       addressEditCom,
+      successHandle,
     };
   },
 };
