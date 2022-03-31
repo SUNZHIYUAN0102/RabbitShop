@@ -1,5 +1,8 @@
 <template>
-  <xtx-dialog title="添加收货地址" v-model:visible="visible">
+  <xtx-dialog
+    :title="`${formData.id ? '修改' : '添加'}收货地址`"
+    v-model:visible="visible"
+  >
     <div class="address-edit">
       <div class="xtx-form">
         <div class="xtx-form-item">
@@ -78,7 +81,7 @@
 
 <script>
 import { reactive, ref } from "vue-demi";
-import { addAddress } from "@/api/order";
+import { addAddress, editAddress } from "@/api/order";
 import Message from "@/components/library/Message";
 export default {
   setup(props, { emit }) {
@@ -97,13 +100,19 @@ export default {
       fullLocation: "",
     });
 
-    const open = () => {
+    const open = (address) => {
       visible.value = true;
-      for (const key in formData) {
-        if (key === "isDefault") {
-          formData[key] = 1;
-        } else {
-          formData[key] = null;
+      if (address.id) {
+        for (const key in address) {
+          formData[key] = address[key];
+        }
+      } else {
+        for (const key in formData) {
+          if (key === "isDefault") {
+            formData[key] = 1;
+          } else {
+            formData[key] = null;
+          }
         }
       }
     };
@@ -116,11 +125,20 @@ export default {
     };
 
     const submit = () => {
-      addAddress(formData).then(() => {
-        Message({ type: "success", text: "添加收货地址成功" });
-        visible.value = false;
-        emit("on-success", formData);
-      });
+      if (formData.id) {
+        editAddress(formData).then((data) => {
+          Message({ type: "success", text: "修改收货地址成功" });
+          visible.value = false;
+          emit("on-success", formData);
+        });
+      } else {
+        addAddress(formData).then(() => {
+          Message({ type: "success", text: "添加收货地址成功" });
+          formData.id = data.result.id;
+          visible.value = false;
+          emit("on-success", formData);
+        });
+      }
     };
     return {
       visible,

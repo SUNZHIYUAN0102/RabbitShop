@@ -7,3 +7,7 @@ export const createOrder = () => {
 export const addAddress = (form) => {
     return request('/member/address', 'post', form)
 }
+
+export const editAddress = (form) => {
+    return request(`/member/address/${form.id}`, 'put', form)
+}

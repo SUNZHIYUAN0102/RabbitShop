@@ -17,11 +17,16 @@
           }}{{ showAddress.address }}
         </li>
       </ul>
-      <a v-if="showAddress" href="javascript:;">修改地址</a>
+      <a
+        @click="openAddressEdit(showAddress)"
+        v-if="showAddress"
+        href="javascript:;"
+        >修改地址</a
+      >
     </div>
     <div class="action">
       <xtx-button @click="openDialog" class="btn">切换地址</xtx-button>
-      <xtx-button @click="openAddressEdit" class="btn">添加地址</xtx-button>
+      <xtx-button @click="openAddressEdit({})" class="btn">添加地址</xtx-button>
     </div>
   </div>
   <xtx-dialog title="切换收货地址" v-model:visible="visible">
@@ -97,14 +102,20 @@ export default {
     };
 
     const addressEditCom = ref(null);
-    const openAddressEdit = () => {
-      addressEditCom.value.open();
+    const openAddressEdit = (address) => {
+      addressEditCom.value.open(address);
     };
 
     const successHandle = (formData) => {
-      const jsonStr = JSON.stringify(formData)
-
-      props.list.unshift(JSON.parse(jsonStr));
+      const address = props.list.find((x) => x.id === formData.id);
+      if (address) {
+        for (const key in address) {
+          address[key] = formData[key];
+        }
+      } else {
+        const jsonStr = JSON.stringify(formData);
+        props.list.unshift(JSON.parse(jsonStr));
+      }
     };
 
     return {
