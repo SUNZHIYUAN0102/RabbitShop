@@ -21,7 +21,7 @@
     </div>
     <div class="action">
       <xtx-button @click="openDialog" class="btn">切换地址</xtx-button>
-      <xtx-button class="btn">添加地址</xtx-button>
+      <xtx-button @click="openAddressEdit" class="btn">添加地址</xtx-button>
     </div>
   </div>
   <xtx-dialog title="切换收货地址" v-model:visible="visible">
@@ -53,15 +53,20 @@
       <xtx-button @click="confirmAddress" type="primary">确认</xtx-button>
     </template>
   </xtx-dialog>
+  <address-edit ref="addressEditCom"></address-edit>
 </template>
 <script>
 import { ref } from "vue-demi";
+import addressEdit from "./address-edit.vue";
 export default {
   props: {
     list: {
       type: Array,
       default: () => [],
     },
+  },
+  components: {
+    addressEdit,
   },
   emits: ["change"],
   setup(props, { emit }) {
@@ -91,12 +96,19 @@ export default {
       visible.value = true;
     };
 
+    const addressEditCom = ref(null);
+    const openAddressEdit = () => {
+      addressEditCom.value.open();
+    };
+
     return {
       showAddress,
       visible,
       selectedAddress,
       confirmAddress,
       openDialog,
+      openAddressEdit,
+      addressEditCom,
     };
   },
 };

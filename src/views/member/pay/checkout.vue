@@ -2,9 +2,9 @@
   <div class="xtx-pay-checkout-page">
     <div class="container">
       <xtx-bread>
-        <xtx-bread-tem to="/">首页</xtx-bread-tem>
-        <xtx-bread-tem to="/cart">购物车</xtx-bread-tem>
-        <xtx-bread-tem>填写订单</xtx-bread-tem>
+        <xtx-bread-item to="/">首页</xtx-bread-item>
+        <xtx-bread-item to="/cart">购物车</xtx-bread-item>
+        <xtx-bread-item>填写订单</xtx-bread-item>
       </xtx-bread>
       <div class="wrapper" v-if="order">
         <h3 class="box-title">收货地址</h3>
