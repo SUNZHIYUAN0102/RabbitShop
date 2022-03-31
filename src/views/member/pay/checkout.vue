@@ -7,10 +7,12 @@
         <xtx-bread-tem>填写订单</xtx-bread-tem>
       </xtx-bread>
       <div class="wrapper" v-if="order">
-
         <h3 class="box-title">收货地址</h3>
         <div class="box-body">
-          <checkout-address :list="order.userAddresses"></checkout-address>
+          <checkout-address
+            @change="changeAddress"
+            :list="order.userAddresses"
+          ></checkout-address>
         </div>
 
         <h3 class="box-title">商品信息</h3>
@@ -37,7 +39,7 @@
                   </a>
                 </td>
                 <td>&yen;{{ item.price }}</td>
-                <td>{{item.count}}</td>
+                <td>{{ item.count }}</td>
                 <td>&yen;{{ item.totalPrice }}</td>
                 <td>&yen;{{ item.totalPayPrice }}</td>
               </tr>
@@ -66,19 +68,19 @@
           <div class="total">
             <dl>
               <dt>商品件数：</dt>
-              <dd>{{order.summary.goodsCount}}件</dd>
+              <dd>{{ order.summary.goodsCount }}件</dd>
             </dl>
             <dl>
               <dt>商品总价：</dt>
-              <dd>¥{{order.summary.totalPrice}}</dd>
+              <dd>¥{{ order.summary.totalPrice }}</dd>
             </dl>
             <dl>
               <dt>运<i></i>费：</dt>
-              <dd>¥{{order.summary.postFee}}</dd>
+              <dd>¥{{ order.summary.postFee }}</dd>
             </dl>
             <dl>
               <dt>应付总额：</dt>
-              <dd class="price">¥{{order.summary.totalPayPrice}}</dd>
+              <dd class="price">¥{{ order.summary.totalPayPrice }}</dd>
             </dl>
           </div>
         </div>
@@ -104,8 +106,15 @@ export default {
       order.value = data.result;
     });
 
+    const addressId = ref(null);
+
+    const changeAddress = (id) => {
+      addressId.value = id;
+    };
+
     return {
       order,
+      changeAddress,
     };
   },
 };

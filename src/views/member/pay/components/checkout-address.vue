@@ -20,12 +20,29 @@
       <a v-if="showAddress" href="javascript:;">修改地址</a>
     </div>
     <div class="action">
-      <xtx-button @click="visible = true" class="btn">切换地址</xtx-button>
-      <xtx-button @click="visible = true" class="btn">添加地址</xtx-button>
+      <xtx-button @click="openDialog" class="btn">切换地址</xtx-button>
+      <xtx-button class="btn">添加地址</xtx-button>
     </div>
   </div>
   <xtx-dialog title="切换收货地址" v-model:visible="visible">
-    内容
+    <div
+      @click="selectedAddress = item"
+      :class="{ active: selectedAddress && selectedAddress.id == item.id }"
+      class="text item"
+      v-for="item in list"
+      :key="item.id"
+    >
+      <ul>
+        <li>
+          <span>收<i />货<i />人：</span>{{ item.receiver }}
+        </li>
+        <li><span>联系方式：</span>{{ item.contact }}</li>
+        <li>
+          <span>收货地址：</span
+          >{{ item.fullLocation.replace(/ /g, "") + item.address }}
+        </li>
+      </ul>
+    </div>
     <template v-slot:footer>
       <xtx-button
         @click="visible = false"
@@ -33,7 +50,7 @@
         style="margin-right: 20px"
         >取消</xtx-button
       >
-      <xtx-button @click="visible = false" type="primary">确认</xtx-button>
+      <xtx-button @click="confirmAddress" type="primary">确认</xtx-button>
     </template>
   </xtx-dialog>
 </template>
@@ -46,7 +63,8 @@ export default {
       default: () => [],
     },
   },
-  setup(props) {
+  emits: ["change"],
+  setup(props, { emit }) {
     const showAddress = ref(null);
     const defaultAddress = props.list.find((item) => item.isDefault === 0);
     const visible = ref(false);
@@ -59,14 +77,54 @@ export default {
       }
     }
 
+    emit("change", showAddress.value && showAddress.value.id);
+    const selectedAddress = ref(null);
+
+    const confirmAddress = () => {
+      showAddress.value = selectedAddress.value;
+      emit("change", showAddress.value.id);
+      visible.value = false;
+    };
+
+    const openDialog = () => {
+      selectedAddress.value = null;
+      visible.value = true;
+    };
+
     return {
       showAddress,
       visible,
+      selectedAddress,
+      confirmAddress,
+      openDialog,
     };
   },
 };
 </script>
 <style scoped lang="less">
+.xtx-dialog {
+  .text {
+    flex: 1;
+    min-height: 90px;
+    display: flex;
+    align-items: center;
+    &.item {
+      border: 1px solid #f5f5f5;
+      margin-bottom: 10px;
+      cursor: pointer;
+      &.active,
+      &:hover {
+        border-color: @xtxColor;
+        background: lighten(@xtxColor, 50%);
+      }
+      > ul {
+        padding: 10px;
+        font-size: 14px;
+        line-height: 30px;
+      }
+    }
+  }
+}
 .checkout-address {
   border: 1px solid #f5f5f5;
   display: flex;
