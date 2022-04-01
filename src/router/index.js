@@ -9,6 +9,7 @@ import LoginCallBack from '@/views/login/callback.vue'
 import Cart from '@/views/cart/index.vue'
 import store from '@/store'
 import Checkout from '@/views/member/pay/checkout.vue'
+import Pay from '@/views/member/pay/index.vue'
 
 const routes = [{
     path: '/',
@@ -31,6 +32,9 @@ const routes = [{
     }, {
         path: '/member/checkout',
         component: Checkout
+    }, {
+        path: '/member/pay',
+        component: Pay
     }]
 }, {
     path: '/login',
