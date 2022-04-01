@@ -132,7 +132,7 @@ export default {
           emit("on-success", formData);
         });
       } else {
-        addAddress(formData).then(() => {
+        addAddress(formData).then((data) => {
           Message({ type: "success", text: "添加收货地址成功" });
           formData.id = data.result.id;
           visible.value = false;
