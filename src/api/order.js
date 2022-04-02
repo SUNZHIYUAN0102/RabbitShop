@@ -15,3 +15,7 @@ export const editAddress = (form) => {
 export const submitOrder = (params) => {
     return request('/member/order', 'post', params)
 }
+
+export const findOrderDetail = (orderId) => {
+    return request(`/member/order/${orderId}`, 'get')
+}
