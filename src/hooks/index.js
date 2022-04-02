@@ -43,7 +43,8 @@ export const usePayTime = () => {
     });
 
     const start = (countDown) => {
-        time.value = countDown
+        time.value = countDown;
+        timeText.value = dayjs.unix(time.value).format("mm分ss秒");
         resume()
     }
     return {

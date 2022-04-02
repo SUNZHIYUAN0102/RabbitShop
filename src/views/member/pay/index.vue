@@ -28,7 +28,12 @@
         <div class="item">
           <p>支付平台</p>
           <a class="btn wx" href="javascript:;"></a>
-          <a class="btn alipay" href="javascript:;"></a>
+          <a
+            class="btn alipay"
+            @click="visibleDialog = true"
+            :href="payUrl"
+            target="_blank"
+          ></a>
         </div>
         <div class="item">
           <p>支付方式</p>
@@ -40,18 +45,32 @@
         </div>
       </div>
     </div>
+    <xtx-dialog title="正在支付..." v-model:visible="visibleDialog">
+      <div class="pay-wait">
+        <img src="@/assets/images/load.gif" alt="" />
+        <div v-if="order">
+          <p>如果支付成功：</p>
+          <RouterLink :to="`/member/order/${$route.query.orderId}`"
+            >查看订单详情></RouterLink
+          >
+          <p>如果支付失败：</p>
+          <RouterLink to="/">查看相关疑问></RouterLink>
+        </div>
+      </div>
+    </xtx-dialog>
   </div>
 </template>
 <script>
 import { findOrderDetail } from "@/api/order";
 import { useRoute } from "vue-router";
-import { ref } from "vue-demi";
+import { computed, ref } from "vue-demi";
 import { usePayTime } from "@/hooks";
-
+import { baseURL } from "@/utils/request";
 export default {
   setup() {
     const route = useRoute();
     const order = ref(null);
+    const visibleDialog = ref(false);
     findOrderDetail(route.query.orderId).then((data) => {
       order.value = data.result;
       if (data.result.countdown > -1) {
@@ -61,9 +80,19 @@ export default {
 
     const { start, timeText } = usePayTime();
 
+    const redirect = encodeURIComponent(
+      "http://www.corho.com:8080/#/pay/callback"
+    );
+
+    const payUrl = computed(() => {
+      return `${baseURL}/pay/aliPay?orderId=${route.query.orderId}&redirect=${redirect}`;
+    });
+
     return {
       order,
       timeText,
+      payUrl,
+      visibleDialog,
     };
   },
 };
@@ -140,6 +169,17 @@ export default {
       background: url(https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/c66f98cff8649bd5ba722c2e8067c6ca.jpg)
         no-repeat center / contain;
     }
+  }
+}
+.pay-wait {
+  display: flex;
+  justify-content: space-around;
+  p {
+    margin-top: 30px;
+    font-size: 14px;
+  }
+  a {
+    color: @xtxColor;
   }
 }
 </style>
