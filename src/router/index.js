@@ -10,6 +10,8 @@ import Cart from '@/views/cart/index.vue'
 import store from '@/store'
 import Checkout from '@/views/member/pay/checkout.vue'
 import Pay from '@/views/member/pay/index.vue'
+import MemberLayout from '@/views/member/Layout.vue'
+import MemberHome from '@/views/member/home/index.vue'
 
 const routes = [{
     path: '/',
@@ -35,6 +37,13 @@ const routes = [{
     }, {
         path: '/member/pay',
         component: Pay
+    }, {
+        path: '/member',
+        component: MemberLayout,
+        children: [{
+            path: '/member',
+            component: MemberHome
+        }]
     }]
 }, {
     path: '/login',
