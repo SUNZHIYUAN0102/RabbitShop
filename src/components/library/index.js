@@ -12,7 +12,6 @@ export default {
         })
 
         defineDirective(app)
-
         app.config.globalProperties.$message = Message
     }
 }

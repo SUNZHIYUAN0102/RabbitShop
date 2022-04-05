@@ -1,12 +1,15 @@
 <template>
-  <!-- 概览 -->
   <div class="home-overview">
-    <!-- 用户信息 -->
     <div class="user-meta">
       <div class="avatar">
-        <img src="http://zhoushugang.gitee.io/erabbit-client-pc-static/uploads/avatar_1.png"/>
+        <img :src="$store.state.user.profile.avatar" />
       </div>
-      <h4>徐菲菲</h4>
+      <h4>
+        {{
+          $store.state.user.profile.nickname ||
+          $store.state.user.profile.account
+        }}
+      </h4>
     </div>
     <div class="item">
       <a href="javascript:;">
@@ -25,13 +28,13 @@
   </div>
 </template>
 <script>
-export default {
-}
+export default {};
 </script>
 <style scoped lang="less">
 .home-overview {
   height: 132px;
-  background: url(../../../../assets/images/center-bg.png) no-repeat center / cover;
+  background: url(../../../../assets/images/center-bg.png) no-repeat center /
+    cover;
   display: flex;
   .user-meta {
     flex: 1;

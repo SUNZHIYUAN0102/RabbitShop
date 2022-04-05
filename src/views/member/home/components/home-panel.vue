@@ -4,7 +4,6 @@
       <h4>{{ title }}</h4>
       <xtx-more to="/" />
     </div>
-    <!-- 商品列表 -->
     <div class="goods-list">
       <slot></slot>
     </div>
@@ -15,10 +14,10 @@ export default {
   props: {
     title: {
       type: String,
-      default: ''
-    }
-  }
-}
+      default: "",
+    },
+  },
+};
 </script>
 <style scoped lang="less">
 .home-panel {
@@ -38,5 +37,10 @@ export default {
       font-weight: normal;
     }
   }
+}
+.goods-list {
+  display: flex;
+  justify-content: space-around;
+  padding-top: 20px;
 }
 </style>
