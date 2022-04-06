@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHashHistory, RouterView } from 'vue-router'
 import Layout from '@/views/Layout.vue'
 import Home from '@/views/home/index.vue'
 import TopCategory from '@/views/category/index.vue'
@@ -12,6 +12,9 @@ import Checkout from '@/views/member/pay/checkout.vue'
 import Pay from '@/views/member/pay/index.vue'
 import MemberLayout from '@/views/member/Layout.vue'
 import MemberHome from '@/views/member/home/index.vue'
+import MemberOrder from '@/views/member/order/index.vue'
+import MemberOrderDetail from '@/views/member/order/detail.vue'
+import { h } from 'vue'
 
 const routes = [{
     path: '/',
@@ -41,9 +44,21 @@ const routes = [{
         path: '/member',
         component: MemberLayout,
         children: [{
-            path: '/member',
-            component: MemberHome
-        }]
+                path: '/member',
+                component: MemberHome
+            },
+            {
+                path: '/member/order',
+                component: { render: () => h( < RouterView / > ) },
+                children: [{
+                    path: '',
+                    component: MemberOrder
+                }, {
+                    path: ':id',
+                    component: MemberOrderDetail
+                }]
+            }
+        ]
     }]
 }, {
     path: '/login',
