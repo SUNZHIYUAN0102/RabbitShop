@@ -1,12 +1,11 @@
 <template>
-    <div class="member-order">11</div>
-    <router-link to="/member/order/1001">订单一</router-link>
+  <div class="member-order">
+    <xtx-tabs></xtx-tabs>
+  </div>
 </template>
 
 <script>
 export default {
-    setup() {
-        
-    },
+  setup () {}
 }
 </script>
