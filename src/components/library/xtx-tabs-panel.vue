@@ -1,9 +1,10 @@
 <template>
-  <div class="xtx-tabs-panel">
+  <div class="xtx-tabs-panel" v-show="name === activeName">
     <slot></slot>
   </div>
 </template>
 <script>
+import { inject } from 'vue-demi'
 export default {
   name: 'xtxTabsPanel',
   props: {
@@ -14,6 +15,13 @@ export default {
     name: {
       type: [String, Number],
       default: ''
+    }
+  },
+  setup () {
+    const activeName = inject('activeName')
+
+    return {
+      activeName
     }
   }
 }

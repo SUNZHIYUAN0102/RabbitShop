@@ -1,6 +1,6 @@
 <template>
   <div class="member-order">
-    <xtx-tabs>
+    <xtx-tabs v-model="activeName" @tab-click="changeTab">
       <xtx-tabs-panel
         v-for="i in 5"
         :key="i"
@@ -13,7 +13,19 @@
 </template>
 
 <script>
+import { ref } from 'vue-demi'
 export default {
-  setup () {}
+  setup () {
+    const activeName = ref('name2')
+
+    const changeTab = (tab) => {
+      console.log(tab)
+    }
+
+    return {
+      activeName,
+      changeTab
+    }
+  }
 }
 </script>

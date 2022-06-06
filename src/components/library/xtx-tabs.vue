@@ -1,6 +1,27 @@
 <script>
+import { useVModel } from '@vueuse/core'
+import { provide } from 'vue-demi'
 export default {
   name: 'xtxTabs',
+  props: {
+    modelValue: {
+      type: [String, Number],
+      default: ''
+    }
+  },
+  setup (props, { emit }) {
+    const activeName = useVModel(props, 'modelValue', emit)
+
+    const tabClick = (name, index) => {
+      activeName.value = name
+      emit('tab-click', { name, index })
+    }
+    provide('activeName', activeName)
+    return {
+      activeName,
+      tabClick
+    }
+  },
   render () {
     const panels = this.$slots.default()
 
@@ -18,7 +39,15 @@ export default {
     const nav = (
       <nav>
         {dynamicPanels.map((item, i) => {
-          return <a href="">{item.props.label}</a>
+          return (
+            <a
+              class={{ active: item.props.name === this.activeName }}
+              href="javascript:;"
+              onClick={() => this.tabClick(item.props.name, i)}
+            >
+              {item.props.label}
+            </a>
+          )
         })}
       </nav>
     )
