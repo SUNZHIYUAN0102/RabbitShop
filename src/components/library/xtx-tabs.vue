@@ -25,8 +25,6 @@ export default {
   render () {
     const panels = this.$slots.default()
 
-    console.log(this)
-
     const dynamicPanels = []
     panels.forEach((item) => {
       if (item.type.name === 'xtxTabsPanel') {
