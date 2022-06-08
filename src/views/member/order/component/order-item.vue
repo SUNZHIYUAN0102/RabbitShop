@@ -88,7 +88,6 @@ export default {
   },
   setup (props) {
     const { start, timeText } = usePayTime()
-    console.log(props.order.countdown)
     start(props.order.countdown)
     return {
       orderStatus,
