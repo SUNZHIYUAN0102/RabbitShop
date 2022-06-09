@@ -16,6 +16,7 @@
         v-for="item in orderList"
         :key="item.id"
         :order="item"
+        @on-cancel="handleCancel"
       ></order-item>
     </div>
 
@@ -26,6 +27,8 @@
       :total="total"
       @current-change="reqParams.page = $event"
     ></xtx-pagination>
+
+    <order-cancel ref="orderCancelCom"></order-cancel>
   </div>
 </template>
 
@@ -34,9 +37,11 @@ import { reactive, ref, watch } from 'vue-demi'
 import { orderStatus } from '@/api/constant'
 import orderItem from './component/order-item.vue'
 import { findOrderList } from '@/api/order'
+import orderCancel from './component/order-cancel.vue'
 export default {
   components: {
-    orderItem
+    orderItem,
+    orderCancel
   },
   setup () {
     const activeName = ref('all')
@@ -80,8 +85,21 @@ export default {
       tabClick,
       loading,
       total,
-      reqParams
+      reqParams,
+      ...useCancel()
     }
+  }
+}
+
+const useCancel = () => {
+  const orderCancelCom = ref(null)
+  const handleCancel = (order) => {
+    orderCancelCom.value.open(order)
+  }
+
+  return {
+    handleCancel,
+    orderCancelCom
   }
 }
 </script>

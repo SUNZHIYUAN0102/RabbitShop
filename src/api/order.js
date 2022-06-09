@@ -23,3 +23,7 @@ export const findOrderDetail = (orderId) => {
 export const findOrderList = ({ page = 1, pageSize = 10, orderState = 0 }) => {
   return request('/member/order', 'get', { page, pageSize, orderState })
 }
+
+export const cancelOrder = ({ orderId, cancelReason }) => {
+  return request(`/member/order/${orderId}/cancel`, 'put', { cancelReason })
+}
