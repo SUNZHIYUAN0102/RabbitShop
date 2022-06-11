@@ -17,6 +17,7 @@
         :key="item.id"
         :order="item"
         @on-cancel="handleCancel"
+        @on-delete="handleDelete"
       ></order-item>
     </div>
 
@@ -36,8 +37,11 @@
 import { reactive, ref, watch } from 'vue-demi'
 import { orderStatus } from '@/api/constant'
 import orderItem from './component/order-item.vue'
-import { findOrderList } from '@/api/order'
+import { findOrderList, deleteOrder } from '@/api/order'
 import orderCancel from './component/order-cancel.vue'
+import Confirm from '@/components/library/Confirm'
+
+import Message from '@/components/library/Message'
 export default {
   components: {
     orderItem,
@@ -52,6 +56,15 @@ export default {
       orderStatus: 0
     })
 
+    const getOrderList = () => {
+      loading.value = true
+      findOrderList(reqParams).then((data) => {
+        orderList.value = data.result.items
+        total.value = data.result.counts
+        loading.value = false
+      })
+    }
+
     const loading = ref(false)
 
     const total = ref(0)
@@ -59,12 +72,7 @@ export default {
     watch(
       reqParams,
       () => {
-        loading.value = true
-        findOrderList(reqParams).then((data) => {
-          orderList.value = data.result.items
-          total.value = data.result.counts
-          loading.value = false
-        })
+        getOrderList()
       },
       { immediate: true }
     )
@@ -74,6 +82,19 @@ export default {
       reqParams.orderState = index
       orderList.value = []
       total.value = 0
+    }
+
+    const handleDelete = (order) => {
+      Confirm({ text: '您确认删除当前订单?' })
+        .then(() => {
+          deleteOrder(order).then(() => {
+            Message({ text: '删除成功', type: 'success' })
+            orderList.value = []
+            total.value = 0
+            getOrderList()
+          })
+        })
+        .catch(() => {})
     }
 
     const orderList = ref([])
@@ -86,7 +107,8 @@ export default {
       loading,
       total,
       reqParams,
-      ...useCancel()
+      ...useCancel(),
+      handleDelete
     }
   }
 }
