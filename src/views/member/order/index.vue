@@ -18,6 +18,7 @@
         :order="item"
         @on-cancel="handleCancel"
         @on-delete="handleDelete"
+        @on-confirm="handleConfirm"
       ></order-item>
     </div>
 
@@ -37,7 +38,7 @@
 import { reactive, ref, watch } from 'vue-demi'
 import { orderStatus } from '@/api/constant'
 import orderItem from './component/order-item.vue'
-import { findOrderList, deleteOrder } from '@/api/order'
+import { findOrderList, deleteOrder, confirmOrder } from '@/api/order'
 import orderCancel from './component/order-cancel.vue'
 import Confirm from '@/components/library/Confirm'
 
@@ -85,6 +86,7 @@ export default {
     }
 
     const handleDelete = (order) => {
+      console.log(order)
       Confirm({ text: '您确认删除当前订单?' })
         .then(() => {
           deleteOrder(order).then(() => {
@@ -108,6 +110,7 @@ export default {
       total,
       reqParams,
       ...useCancel(),
+      ...useConfirm(),
       handleDelete
     }
   }
@@ -122,6 +125,22 @@ const useCancel = () => {
   return {
     handleCancel,
     orderCancelCom
+  }
+}
+
+const useConfirm = () => {
+  const handleConfirm = (order) => {
+    Confirm({ text: '确认收货吗? 确认后货款将打给卖家' })
+      .then(() => {
+        confirmOrder(order).then(() => {
+          Message({ text: '确认收货成功', type: 'success' })
+          order.orderState = 4
+        })
+      })
+      .catch(() => {})
+  }
+  return {
+    handleConfirm
   }
 }
 </script>

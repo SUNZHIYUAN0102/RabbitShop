@@ -61,7 +61,11 @@
           size="small"
           >立即付款</xtx-button
         >
-        <xtx-button v-if="order.orderState === 3" type="primary" size="small"
+        <xtx-button
+          @click="$emit('on-confirm', order)"
+          v-if="order.orderState === 3"
+          type="primary"
+          size="small"
           >确认收货</xtx-button
         >
         <p>
@@ -95,7 +99,7 @@ export default {
       default: () => ({})
     }
   },
-  emits: ['on-cancel', 'on-delete'],
+  emits: ['on-cancel', 'on-delete', 'on-confirm'],
   setup (props) {
     const { start, timeText } = usePayTime()
     start(props.order.countdown)

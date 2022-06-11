@@ -24,10 +24,14 @@ export const findOrderList = ({ page = 1, pageSize = 10, orderState = 0 }) => {
   return request('/member/order', 'get', { page, pageSize, orderState })
 }
 
-export const cancelOrder = ({ orderId, cancelReason }) => {
-  return request(`/member/order/${orderId}/cancel`, 'put', { cancelReason })
+export const cancelOrder = ({ id, cancelReason }) => {
+  return request(`/member/order/${id}/cancel`, 'put', { cancelReason })
 }
 
-export const deleteOrder = ({ orderId }) => {
-  return request('/member/order', 'delete', { ids: [orderId] })
+export const deleteOrder = ({ id }) => {
+  return request('/member/order', 'delete', { ids: [id] })
+}
+
+export const confirmOrder = ({ id }) => {
+  return request(`/member/order/${id}/receipt`, 'put')
 }
