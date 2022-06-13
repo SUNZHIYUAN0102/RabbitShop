@@ -35,3 +35,7 @@ export const deleteOrder = ({ id }) => {
 export const confirmOrder = ({ id }) => {
   return request(`/member/order/${id}/receipt`, 'put')
 }
+
+export const logisticsOrder = ({ id }) => {
+  return request(`/member/order/${id}/logistics`, 'get')
+}

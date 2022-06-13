@@ -19,6 +19,7 @@
         @on-cancel="handleCancel"
         @on-delete="handleDelete"
         @on-confirm="handleConfirm"
+        @on-logistics="handleLogistics"
       ></order-item>
     </div>
 
@@ -31,6 +32,7 @@
     ></xtx-pagination>
 
     <order-cancel ref="orderCancelCom"></order-cancel>
+    <order-logistics ref="orderLogisticsCom"></order-logistics>
   </div>
 </template>
 
@@ -38,15 +40,21 @@
 import { reactive, ref, watch } from 'vue-demi'
 import { orderStatus } from '@/api/constant'
 import orderItem from './component/order-item.vue'
-import { findOrderList, deleteOrder, confirmOrder } from '@/api/order'
+import {
+  findOrderList,
+  deleteOrder,
+  confirmOrder,
+  logisticsOrder
+} from '@/api/order'
 import orderCancel from './component/order-cancel.vue'
 import Confirm from '@/components/library/Confirm'
-
+import orderLogistics from './component/order-logistics.vue'
 import Message from '@/components/library/Message'
 export default {
   components: {
     orderItem,
-    orderCancel
+    orderCancel,
+    orderLogistics
   },
   setup () {
     const activeName = ref('all')
@@ -111,6 +119,7 @@ export default {
       reqParams,
       ...useCancel(),
       ...useConfirm(),
+      ...useLogistics(),
       handleDelete
     }
   }
@@ -141,6 +150,20 @@ const useConfirm = () => {
   }
   return {
     handleConfirm
+  }
+}
+
+const useLogistics = () => {
+  const orderLogisticsCom = ref(null)
+  const handleLogistics = (order) => {
+    logisticsOrder(order).then((data) => {
+      orderLogisticsCom.value.open(data.result)
+    })
+  }
+
+  return {
+    handleLogistics,
+    orderLogisticsCom
   }
 }
 </script>
