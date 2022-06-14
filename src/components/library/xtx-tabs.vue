@@ -11,7 +11,6 @@ export default {
   },
   setup (props, { emit }) {
     const activeName = useVModel(props, 'modelValue', emit)
-
     const tabClick = (name, index) => {
       activeName.value = name
       emit('tab-click', { name, index })
