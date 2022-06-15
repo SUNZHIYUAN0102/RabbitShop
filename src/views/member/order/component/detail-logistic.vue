@@ -4,12 +4,17 @@
       <span>{{ list[0].text }}</span>
       <span>{{ list[0].time }}</span>
     </p>
-    <a href="javascript:;">查看物流</a>
+    <a @click="handleLogistics(order)" href="javascript:;">查看物流</a>
+    <Teleport to="#model">
+      <order-logistics ref="orderLogisticsCom"></order-logistics>
+    </Teleport>
   </div>
 </template>
 <script>
 import { logisticsOrder } from '@/api/order'
 import { ref } from 'vue-demi'
+import orderLogistics from './order-logistics.vue'
+import { useLogistics } from '../index.vue'
 export default {
   props: {
     order: {
@@ -17,14 +22,16 @@ export default {
       default: () => ({})
     }
   },
+  components: {
+    orderLogistics
+  },
 
   async setup (props) {
     const data = await logisticsOrder(props.order)
-
     const list = ref(data.result.list)
-
     return {
-      list
+      list,
+      ...useLogistics()
     }
   }
 }

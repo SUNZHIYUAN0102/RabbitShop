@@ -153,7 +153,7 @@ const useConfirm = () => {
   }
 }
 
-const useLogistics = () => {
+export const useLogistics = () => {
   const orderLogisticsCom = ref(null)
   const handleLogistics = (order) => {
     logisticsOrder(order).then((data) => {
