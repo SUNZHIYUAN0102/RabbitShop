@@ -66,8 +66,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.xtx-dialog ::v-deep .wrapper {
-  width: 620px;
+.xtx-dialog :deep(.wrapper) {
+  width: 620px !important;
 }
 .cancel-info {
   p {

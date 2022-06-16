@@ -137,7 +137,7 @@ export const useCancel = () => {
   }
 }
 
-const useConfirm = () => {
+export const useConfirm = () => {
   const handleConfirm = (order) => {
     Confirm({ text: '确认收货吗? 确认后货款将打给卖家' })
       .then(() => {
