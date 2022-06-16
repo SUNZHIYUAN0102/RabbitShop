@@ -125,7 +125,7 @@ export default {
   }
 }
 
-const useCancel = () => {
+export const useCancel = () => {
   const orderCancelCom = ref(null)
   const handleCancel = (order) => {
     orderCancelCom.value.open(order)
