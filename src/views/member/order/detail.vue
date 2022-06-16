@@ -13,6 +13,7 @@
         <template #fallback><div class="loading">loading....</div></template>
       </Suspense>
     </template>
+    <detail-info v-if="order" :order="order"></detail-info>
   </div>
 </template>
 
@@ -21,13 +22,15 @@ import { ref } from 'vue-demi'
 import detailAction from './component/detail-action.vue'
 import detailStep from './component/detail-step.vue'
 import detailLogistic from './component/detail-logistic.vue'
+import detailInfo from './component/detail-info.vue'
 import { findOrderDetail } from '@/api/order'
 import { useRoute } from 'vue-router'
 export default {
   components: {
     detailAction,
     detailStep,
-    detailLogistic
+    detailLogistic,
+    detailInfo
   },
   setup () {
     const order = ref(null)
